@@ -1,0 +1,22 @@
+{
+  "name": "sonolus.js-template-ts",
+  "version": "1.4.3",
+  "description": "Sonolus.js Template (TS)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:play": "sonolus-cli --dev ./play",
+    "dev:watch": "sonolus-cli --dev ./watch",
+    "dev:preview": "sonolus-cli --dev ./preview",
+    "dev:tutorial": "sonolus-cli --dev ./tutorial",
+    "type-check": "tsc -p ./shared --noEmit && tsc -p ./play --noEmit && tsc -p ./watch --noEmit && tsc -p ./preview --noEmit && tsc -p ./tutorial --noEmit",
+    "build": "sonolus-cli --build ./play && sonolus-cli --build ./watch && sonolus-cli --build ./preview && sonolus-cli --build ./tutorial",
+    "buildTwo": "sonolus-cli --build ./play && sonolus-cli --build ./watch"
+  },
+  "devDependencies": {
+    "@sonolus/core": "~7.9.0",
+    "@sonolus/sonolus.js": "~9.4.5",
+    "typescript": "~5.5.4"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

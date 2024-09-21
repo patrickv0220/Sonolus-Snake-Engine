@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "rating": 100,
+  "engine": "SnakeEngine",
+  "useSkin": {"useDefault":false,"item":"SnakeSkin"},
+  "useBackground": {"useDefault":true},
+  "useEffect": {"useDefault":true},
+  "useParticle": {"useDefault":true},
+  "title": {"en":"SNAKE"},
+  "artists": {"en":" "},
+  "author": {"en":"LBO44"},
+  "tags": [],
+  "description": {"en":"A simple Snake game I made for fun.\nSwipe to move. \nEat the apples to grow.\n Have Fun !"}
+}
