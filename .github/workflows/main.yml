@@ -1,0 +1,34 @@
+name: sync engine
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22.8.x'  
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build the static folder
+      run: npm run static 
+
+    - name: Upload artifact for deployment
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: static
+
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v1
