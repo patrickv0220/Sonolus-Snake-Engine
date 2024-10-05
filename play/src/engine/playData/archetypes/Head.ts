@@ -67,14 +67,9 @@ export class Head extends Archetype {
       switch (game.dir) {
         case 0: pos.x++; break
         case 2: pos.x--; break
-        case 1: pos.x++; break
+        case 1: pos.y++; break
         case 3: pos.y--; break
       }
-
-      //if (game.dir == 0) pos.x++;
-      //if (game.dir == 2) pos.x--;
-      //if (game.dir == 1) pos.y++;
-      // if (game.dir == 3) pos.y--;
 
       //eat apple
       if (apple.x == pos.x && apple.y == pos.y) {

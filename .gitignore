@@ -2,3 +2,7 @@ node_modules
 
 .dev
 dist
+static
+pack
+source
+move_dist_to_source.sh
