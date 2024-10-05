@@ -21,7 +21,7 @@ nextTick = this.entityMemory(Number)
  if (this.nextTick < time.now) {
       this.nextTick = time.now + 0.4
       this.tick++
-    debug.log(archetypes.Data.sharedMemory.get(this.dataIndex))
+    //debug.log(archetypes.Data.sharedMemory.get(this.dataIndex))
 
       
 
