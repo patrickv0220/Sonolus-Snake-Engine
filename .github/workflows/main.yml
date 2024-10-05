@@ -22,7 +22,7 @@ jobs:
         npm install
         npm run static
     - name: export static
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-pages-artifact@v3
       with:
         name: github-pages
         path: static
