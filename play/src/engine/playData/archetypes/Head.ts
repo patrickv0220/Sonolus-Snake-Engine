@@ -26,7 +26,6 @@ export class Head extends Archetype {
   touch() {
     for (const touch of touches) {
       if (touch.vr > 1.5) {
-        effect.clips.swipe.play(0.02)
         if (Math.abs(touch.sx - touch.x) > Math.abs(touch.sy - touch.y)) {
           if (touch.sx - touch.x > 0) {
             if (game.dir != 0) this.dir = 2;
@@ -53,6 +52,7 @@ export class Head extends Archetype {
       game.dir = this.dir
 
       if (game.dir != this.previousDir) {
+        effect.clips.swipe.play(0.02)
         this.previousDir = game.dir
         game.dataIndex++
       }
