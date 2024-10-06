@@ -4,7 +4,7 @@
   "engine": "SnakeEngine",
   "useSkin": {"useDefault":false,"item":"SnakeSkin"},
   "useBackground": {"useDefault":true},
-  "useEffect": {"useDefault":true},
+  "useEffect": {"useDefault":false,"item":"8bit"},
   "useParticle": {"useDefault":true},
   "title": {"en":"SNAKE"},
   "artists": {"en":" "},

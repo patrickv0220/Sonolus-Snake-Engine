@@ -1,3 +1,4 @@
+import { effect } from "../effect.js";
 import { skin } from "../skin.js"
 import { pos, game, scaleToGrid as tg, apple, layout } from "./Shared.js"
 import { archetypes } from "./index.js";
@@ -25,6 +26,7 @@ export class Head extends Archetype {
   touch() {
     for (const touch of touches) {
       if (touch.vr > 1.5) {
+        effect.clips.swipe.play(0.02)
         if (Math.abs(touch.sx - touch.x) > Math.abs(touch.sy - touch.y)) {
           if (touch.sx - touch.x > 0) {
             if (game.dir != 0) this.dir = 2;
@@ -74,6 +76,7 @@ export class Head extends Archetype {
       //eat apple
       if (apple.x == pos.x && apple.y == pos.y) {
         game.size++;
+        effect.clips.eat.play(0.02)
         archetypes.ScoreEffect.spawn({})
         apple.shouldSpawn = true
       }
@@ -81,6 +84,7 @@ export class Head extends Archetype {
       //hit wall
       if (Math.max(pos.x, pos.y) > 9 || Math.min(pos.x, pos.y) < 0) {
         game.lose = true
+        effect.clips.die.play(0.02)
         game.deathAnimationTarget = game.size
       }
       // horder animation 

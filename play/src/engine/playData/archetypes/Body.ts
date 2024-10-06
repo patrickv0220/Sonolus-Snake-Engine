@@ -1,3 +1,4 @@
+import { effect } from "../effect.js";
 import { skin } from "../skin.js";
 import { apple, game, layout, pos, scaleToGrid as tg } from "./Shared.js";
 
@@ -36,6 +37,7 @@ export class Body extends SpawnableArchetype({}) {
           //detect if the head hit the body.
           if (this.x == pos.x && this.y == pos.y) { 
             game.lose = true
+            effect.clips.die.play(0.02)
             game.deathAnimationTarget = game.size }
         }
       } else if (this.tickLeft === 1) {
