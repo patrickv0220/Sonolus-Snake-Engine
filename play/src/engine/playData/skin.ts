@@ -22,5 +22,7 @@ export const skin = defineSkin({
     plusOne: SkinSpriteName.NoteConnectionNeutral,
     plusTwo: SkinSpriteName.NoteConnectionYellow,
     plusFour: SkinSpriteName.NoteConnectionGreen,
+    //dpad
+    button: SkinSpriteName.NoteHeadNeutral,
   },
 }) 

@@ -1,3 +1,5 @@
+import { optionsDefinition } from "../../../../../shared/src/engine/configuration/options.js";
+import { options } from "../../configuration/options.js";
 import { effect } from "../effect.js";
 import { skin } from "../skin.js"
 import { pos, game, scaleToGrid as tg, apple, layout } from "./Shared.js"
@@ -17,30 +19,85 @@ export class Head extends Archetype {
     y: Number
   })
 
+  dpadDown = this.entityMemory(Rect)
+  dpadUp = this.entityMemory(Rect)
+  dpadRight = this.entityMemory(Rect)
+  dpadLeft = this.entityMemory(Rect)
+
   initialize() {
     this.oldPos.x = pos.x
     this.oldPos.y = pos.y
     archetypes.Body.spawn({})
+
+    layout.dpadUp
+      .translate(screen.l + 0.45, screen.b + 0.45)
+      .copyTo(this.dpadUp)
+    layout.dpadDown
+      .translate(screen.l + 0.45, screen.b + 0.45)
+      .copyTo(this.dpadDown)
+    layout.dpadLeft
+      .translate(screen.l + 0.45, screen.b + 0.45)
+      .copyTo(this.dpadLeft)
+    layout.dpadRight
+      .translate(screen.l + 0.45, screen.b + 0.45)
+      .copyTo(this.dpadRight)
+
   }
 
-  touch() {
-    for (const touch of touches) {
-      if (touch.vr > 1.5) {
-        if (Math.abs(touch.sx - touch.x) > Math.abs(touch.sy - touch.y)) {
-          if (touch.sx - touch.x > 0) {
-            if (game.dir != 0) this.dir = 2;
-          } else {
-            if (game.dir != 2) this.dir = 0;
-          }
+  touchSwipe(touch: Touch) {
+    if (touch.vr > 1.5) {
+      if (Math.abs(touch.sx - touch.x) > Math.abs(touch.sy - touch.y)) {
+        if (touch.sx - touch.x > 0) {
+          if (game.dir != 0) this.dir = 2;
         } else {
-          if (touch.sy - touch.y > 0) {
-            if (game.dir != 1) this.dir = 3;
-          } else {
-            if (game.dir != 3) this.dir = 1;
-          }
+          if (game.dir != 2) this.dir = 0;
+        }
+      } else {
+        if (touch.sy - touch.y > 0) {
+          if (game.dir != 1) this.dir = 3;
+        } else {
+          if (game.dir != 3) this.dir = 1;
         }
       }
     }
+  }
+
+  touchDpad(touch: Touch) {
+    debug.log(0)
+    //check if touching the dpad
+    if (touch.x < screen.l + 0.85 && touch.y < screen.b + 0.85) {
+      // Determine direction based on touch location
+      const deltaX = touch.x - (screen.l + 0.425)
+      const deltaY = touch.y - (screen.b + 0.425)
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal direction
+        if (deltaX > 0) {
+         if (game.dir != 2) this.dir = 0; // Right
+        } else {
+         if (game.dir != 0) this.dir = 2; // Left
+        }
+      } else {
+        // Vertical direction
+        if (deltaY > 0) {
+         if (game.dir != 3) this.dir = 1; // Up
+        } else {
+         if (game.dir != 1) this.dir = 3; // Down
+        }
+      }
+    }
+  }
+
+
+  touch() {
+    for (const touch of touches) {
+      if (options.dpad) this.touchDpad(touch); else this.touchSwipe(touch)
+    }
+  }
+  drawDpad() {
+    skin.sprites.button.draw(this.dpadRight, 100, (this.dir===0)?0.4:0.8 )
+    skin.sprites.button.draw(this.dpadLeft, 100, (this.dir===2)?0.4:0.8)
+    skin.sprites.button.draw(this.dpadDown, 100, (this.dir===3)?0.4:0.8)
+    skin.sprites.button.draw(this.dpadUp, 100, (this.dir===1)?0.4:0.8)
   }
 
   updateSequential() {
@@ -157,5 +214,7 @@ export class Head extends Archetype {
     //draw gride
     skin.sprites.grid.draw(layout.grid, 2, 1)
     skin.sprites.border.draw(layout.gridBorder, 0, 1)
+
+    if (options.dpad) this.drawDpad()
   }
 }
