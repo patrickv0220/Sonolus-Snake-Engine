@@ -1,4 +1,3 @@
-import { optionsDefinition } from "../../../../../shared/src/engine/configuration/options.js";
 import { options } from "../../configuration/options.js";
 import { effect } from "../effect.js";
 import { skin } from "../skin.js"
@@ -63,7 +62,6 @@ export class Head extends Archetype {
   }
 
   touchDpad(touch: Touch) {
-    debug.log(0)
     //check if touching the dpad
     if (touch.x < screen.l + 0.85 && touch.y < screen.b + 0.85) {
       // Determine direction based on touch location
