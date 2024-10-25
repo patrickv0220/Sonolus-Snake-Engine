@@ -2,7 +2,7 @@
 
 My attempt at making a basic snake game for [Sonolus](https://sonolus.com/) (WIP).
 
-If you really want to try out this buggy snake game, you can add the following server url in the Sonolus app: https://lbo44.github.io/Sonolus-Snake-Engine (opening that link in a browser won't work).
+If you really want to try out this buggy snake game, you can add the following server url in the Sonolus app: https://lbo44.github.io/Sonolus-Snake-Engine (opening that link in a browser won't work) or you can directly click on [this link](https://open.sonolus.com/lbo44.github.io/Sonolus-Snake-Engine).
 
 ### Things I should probably do:
 - [ ] find good sfx
