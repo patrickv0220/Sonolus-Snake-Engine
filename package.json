@@ -1,7 +1,9 @@
 {
-  "name": "sonolus.js-template-ts",
-  "version": "1.4.3",
-  "description": "Sonolus.js Template (TS)",
+  "name": "sonolus-snake-engine",
+  "version": "1.0.0",
+  "description": "My attempt at creating a snake game in sonolus",
+  "author": "LBO44",
+  "repository": "https://github.com/LBO44/Sonolus-Snake-Engine",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,12 +16,13 @@
     "build": "sonolus-cli --build ./play && sonolus-cli --build ./watch",
     "static":  "sonolus-cli --build ./play && sonolus-cli --build ./watch && cp ./dist/EnginePlayData ./source/engines/SnakeEngine/playData && cp ./dist/EngineWatchData ./source/engines/SnakeEngine/watchData && cp ./dist/EngineConfiguration ./source/engines/SnakeEngine/configuration && sonolus-pack && sonolus-generate-static"
   },
+  "dependencies": {
+    "@sonolus/core": "~7.9.1"
+  },
   "devDependencies": {
-    "@sonolus/core": "~7.9.1",
     "@sonolus/sonolus.js": "~9.5.0",
     "@sonolus/pack": "5.4.4",
     "@sonolus/generate-static":"5.4.4",
     "typescript": "~5.5.4"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }
