@@ -17,6 +17,11 @@ export class Head extends Archetype {
     x: Number,
     y: Number
   })
+ newApple = this.entityMemory({
+    x: Number,
+    y: Number
+  })
+
 
   dpadDown = this.entityMemory(Rect)
   dpadUp = this.entityMemory(Rect)
@@ -149,16 +154,17 @@ export class Head extends Archetype {
     if (!apple.shouldSpawn && apple.shouldCheckSpawn) apple.shouldCheckSpawn = false
     //spawn apple
     if (apple.shouldSpawn) {
+      
       apple.shouldSpawn = false
       apple.shouldCheckSpawn = true
-      const newAppleX = Math.randomInt(0, 9)
-      const newAppleY = Math.randomInt(0, 9)
-      if (newAppleX === apple.x && newAppleY === apple.y) {
-        apple.x = (newAppleX + Math.randomInt(0, 9)) % 10
-        apple.y = (newAppleY + Math.randomInt(0, 9)) % 10
+    this.newApple.x = Math.randomInt(0, 9)
+      this.newApple.y= Math.randomInt(0, 9)
+      if (this.newApple.x === apple.x && this.newApple.y === apple.y) {
+        apple.x = (this.newApple.x + Math.randomInt(2, 4)) % 10
+        apple.y = (this.newApple.y + Math.randomInt(2, 4)) % 10
       } else {
-        apple.x = newAppleX
-        apple.y = newAppleY
+        apple.x = this.newApple.x
+        apple.y = this.newApple.y
       }
     }
 
