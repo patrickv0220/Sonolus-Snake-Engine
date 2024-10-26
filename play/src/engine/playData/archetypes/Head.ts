@@ -40,7 +40,6 @@ export class Head extends Archetype {
     layout.dpadRight
       .translate(screen.l + 0.45, screen.b + 0.45)
       .copyTo(this.dpadRight)
-
   }
 
   touchSwipe(touch: Touch) {
@@ -64,38 +63,37 @@ export class Head extends Archetype {
   touchDpad(touch: Touch) {
     //check if touching the dpad
     if (touch.x < screen.l + 0.85 && touch.y < screen.b + 0.85) {
-      // Determine direction based on touch location
       const deltaX = touch.x - (screen.l + 0.425)
       const deltaY = touch.y - (screen.b + 0.425)
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
         // Horizontal direction
         if (deltaX > 0) {
-         if (game.dir != 2) this.dir = 0; // Right
+          if (game.dir != 2) this.dir = 0; // Right
         } else {
-         if (game.dir != 0) this.dir = 2; // Left
+          if (game.dir != 0) this.dir = 2; // Left
         }
       } else {
         // Vertical direction
         if (deltaY > 0) {
-         if (game.dir != 3) this.dir = 1; // Up
+          if (game.dir != 3) this.dir = 1; // Up
         } else {
-         if (game.dir != 1) this.dir = 3; // Down
+          if (game.dir != 1) this.dir = 3; // Down
         }
       }
     }
   }
-
 
   touch() {
     for (const touch of touches) {
       if (options.dpad) this.touchDpad(touch); else this.touchSwipe(touch)
     }
   }
+
   drawDpad() {
-    skin.sprites.button.draw(this.dpadRight, 100, (this.dir===0)?0.4:0.8 )
-    skin.sprites.button.draw(this.dpadLeft, 100, (this.dir===2)?0.4:0.8)
-    skin.sprites.button.draw(this.dpadDown, 100, (this.dir===3)?0.4:0.8)
-    skin.sprites.button.draw(this.dpadUp, 100, (this.dir===1)?0.4:0.8)
+    skin.sprites.buttonH.draw(this.dpadRight, 100, (this.dir === 0) ? 0.4 : 0.8)
+    skin.sprites.buttonH.draw(this.dpadLeft, 100, (this.dir === 2) ? 0.4 : 0.8)
+    skin.sprites.buttonV.draw(this.dpadDown, 100, (this.dir === 3) ? 0.4 : 0.8)
+    skin.sprites.buttonV.draw(this.dpadUp, 100, (this.dir === 1) ? 0.4 : 0.8)
   }
 
   updateSequential() {

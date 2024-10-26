@@ -1,4 +1,4 @@
-import { apple, game, layout, pos } from "./Shared.js";
+import { apple, game, pos } from "./Shared.js";
 
 export class Initialization extends Archetype {
   spawnOrderOrder = 0
@@ -34,8 +34,7 @@ export class Initialization extends Archetype {
 
     pos.x = 1
     pos.y = 3
-
- }
+  }
 
   updateSequential() {
     this.despawn = true

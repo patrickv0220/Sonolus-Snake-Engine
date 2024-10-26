@@ -1,21 +1,21 @@
 import { SkinSpriteName } from "@sonolus/core";
 
 export const skin = defineSkin({
-    sprites: {
+  sprites: {
     //snake 🐍
     head: SkinSpriteName.NoteHeadNeutral,
     headDead: SkinSpriteName.NoteHeadRed,
     headSmile: SkinSpriteName.NoteHeadGreen,
     shadow: SkinSpriteName.NoteHeadBlue,
     eyelid: SkinSpriteName.Lane,
- 
+
     bodyLight: SkinSpriteName.NoteTickNeutral,
     bodyDark: SkinSpriteName.NoteTickGreen,
     //fruit 🍓
     apple: SkinSpriteName.NoteTailRed,
     lemon: SkinSpriteName.NoteTailYellow,
     //grid 
-    grid: SkinSpriteName.GridNeutral, 
+    grid: SkinSpriteName.GridNeutral,
     border: SkinSpriteName.GridBlue,
     borderDanger: SkinSpriteName.GridRed,
     //points
@@ -23,6 +23,7 @@ export const skin = defineSkin({
     plusTwo: SkinSpriteName.NoteConnectionYellow,
     plusFour: SkinSpriteName.NoteConnectionGreen,
     //dpad
-    button: SkinSpriteName.NoteHeadNeutral,
+    buttonH: SkinSpriteName.NoteConnectionCyanSeamless,
+    buttonV: SkinSpriteName.NoteConnectionBlueSeamless,
   },
 }) 
