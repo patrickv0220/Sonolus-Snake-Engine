@@ -151,8 +151,15 @@ export class Head extends Archetype {
     if (apple.shouldSpawn) {
       apple.shouldSpawn = false
       apple.shouldCheckSpawn = true
-      apple.x = Math.floor(Math.random() * 10)
-      apple.y = Math.floor(Math.random() * 10)
+      const newAppleX = Math.randomInt(0, 9)
+      const newAppleY = Math.randomInt(0, 9)
+      if (newAppleX === apple.x && newAppleY === apple.y) {
+        apple.x = (newAppleX + Math.randomInt(0, 9)) % 10
+        apple.y = (newAppleY + Math.randomInt(0, 9)) % 10
+      } else {
+        apple.x = newAppleX
+        apple.y = newAppleY
+      }
     }
 
 
