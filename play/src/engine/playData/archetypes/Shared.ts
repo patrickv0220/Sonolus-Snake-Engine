@@ -7,6 +7,7 @@ export const pos = levelMemory({
 
 export const game = levelMemory({
   isTick: Boolean,
+  shouldSaveData: Boolean,
   tick: Number,
   dir: Number,
   size: Number,

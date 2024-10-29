@@ -24,11 +24,14 @@ export class Data extends Archetype {
     return true
   }
 
-  updateParallel() {
-    if (game.dataIndex <= this.import.DataIndex * 16 && game.tick) {
+  updateSequential() {
+
+    if (game.dataIndex <= this.import.DataIndex * 16 && game.shouldSaveData) {
+      game.shouldSaveData=false
       const t = Math.floor(time.now / 0.4)
       const d = game.dir
 
+    
       switch (game.dataIndex % 16) {
         case 1:
           this.export("tick1", t)
@@ -73,10 +76,12 @@ export class Data extends Archetype {
         case 11:
           this.export("tick11", t)
           this.export("dir11", d)
+          debug.log(11)
           break;
         case 12:
           this.export("tick12", t)
           this.export("dir12", d)
+          debug.log(d)
           break;
         case 13:
           this.export("tick13", t)

@@ -1,3 +1,5 @@
+import { game } from "./Shared.js";
+
 export class Data extends Archetype {
 
   importDataTickDir = Object.fromEntries(
@@ -10,18 +12,19 @@ export class Data extends Archetype {
     }).flat()
   );
 
-sharedDataTickDir = Object.fromEntries(
-      Array.from({ length: 16 }, (_, index) => {
-          const i = index + 1;
-          return [
-              [`tick${i}`,Number],
-              [`dir${i}`,Number]
-            ];
-        }).flat()
-    );
+  sharedDataTickDir = Object.fromEntries(
+    Array.from({ length: 16 }, (_, index) => {
+      const i = index + 1;
+      return [
+        [`tick${i}`, Number],
+        [`dir${i}`, Number]
+      ];
+    }).flat()
+  );
 
   import = this.defineImport(this.importDataTickDir)
   sharedMemory = this.defineSharedMemory(this.sharedDataTickDir)
+  testDir = this.entityMemory(Number)
 
   preprocess() {
     this.sharedMemory.tick1 = this.import.tick1;
@@ -72,12 +75,91 @@ sharedDataTickDir = Object.fromEntries(
     this.sharedMemory.tick16 = this.import.tick16;
     this.sharedMemory.dir16 = this.import.dir16;
   }
+  getDir() { 
+    const t = Math.floor(time.now / 4);
+    if (this.import.tick16 <= t) {
+        this.testDir = this.import.dir16;
+        return;
+    }
+    if (this.import.tick15 <= t) {
+        this.testDir = this.import.dir15;
+        return;
+    }
+    if (this.import.tick14 <= t) {
+        this.testDir = this.import.dir14;
+        return;
+    }
+    if (this.import.tick13 <= t) {
+        this.testDir = this.import.dir13;
+        return;
+    }
+    if (this.import.tick12 <= t) {
+        this.testDir = this.import.dir12;
+        return;
+    }
+    if (this.import.tick11 <= t) {
+        this.testDir = this.import.dir11;
+        return;
+    }
+    if (this.import.tick10 <= t) {
+        this.testDir = this.import.dir10;
+        return;
+    }
+    if (this.import.tick9 <= t) {
+        this.testDir = this.import.dir9;
+        return;
+    }
+    if (this.import.tick8 <= t) {
+        this.testDir = this.import.dir8;
+        return;
+    }
+    if (this.import.tick7 <= t) {
+        this.testDir = this.import.dir7;
+        return;
+    }
+    if (this.import.tick6 <= t) {
+        this.testDir = this.import.dir6;
+        return;
+    }
+    if (this.import.tick5 <= t) {
+        this.testDir = this.import.dir5;
+        return;
+    }
+    if (this.import.tick4 <= t) {
+        this.testDir = this.import.dir4;
+        return;
+    }
+    if (this.import.tick3 <= t) {
+        this.testDir = this.import.dir3;
+        return;
+    }
+    if (this.import.tick2 <= t) {
+        this.testDir = this.import.dir2;
+        return;
+    }
+    if (this.import.tick1 <= t) {
+        this.testDir = this.import.dir1;
+        return;
+    }
+
+    // If no tick is less than or equal to `t`, the direction might be unset
+    debug.log(696969) // or a default direction if needed
+}
+
+  updateSequential() {
+this.getDir()
+    game.dir=this.testDir
+    debug.log(this.import.tick1)
+    debug.log(this.import.tick16)
+
+
+  }
   spawnTime() {
-    return -999999
+    return this.sharedMemory.tick1 * 0.4
   }
 
   despawnTime() {
-    return 999999
+    return (this.sharedMemory.tick16 == 0) ? 99999 : this.sharedMemory.tick16 * 0.4
   }
 
 }

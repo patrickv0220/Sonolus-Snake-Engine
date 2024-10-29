@@ -111,6 +111,7 @@ export class Head extends Archetype {
 
       if (game.dir != this.previousDir) {
         effect.clips.swipe.play(0.02)
+        game.shouldSaveData=true
         this.previousDir = game.dir
         game.dataIndex++
       }
