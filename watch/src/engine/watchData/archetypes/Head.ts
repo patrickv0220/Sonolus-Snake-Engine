@@ -59,8 +59,11 @@ export class Head extends Archetype {
         case 3: pos.y--; break
       }
     }
-    skin.sprites.head.draw(layout.sqaure.translate(tg(pos.x), tg(pos.y)), 1, 1)
+    skin.sprites.head.draw(layout.sqaure.translate(tg(pos.x), tg(pos.y)), 50, 1)
     if (options.dpad) this.drawDpad()
+//draw gride
+    skin.sprites.grid.draw(layout.grid, 2, 1)
+    skin.sprites.border.draw(layout.gridBorder, 0, 1)
 
   }
 }
