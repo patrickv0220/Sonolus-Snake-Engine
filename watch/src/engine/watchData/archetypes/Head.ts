@@ -53,7 +53,7 @@ export class Head extends Archetype {
 
       //move haed
       switch (game.dir) {
-        case 0: pos.x++; break
+        case 4: pos.x++; break
         case 2: pos.x--; break
         case 1: pos.x++; break
         case 3: pos.y--; break

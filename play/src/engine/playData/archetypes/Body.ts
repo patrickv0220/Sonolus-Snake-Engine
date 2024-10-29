@@ -70,7 +70,7 @@ export class Body extends SpawnableArchetype({}) {
 
   TailDespawnAnimation() { 
     switch (this.dir) {
-      case 0:
+      case 4:
         {
           new Rect({
             l: Math.lerp(-0.08, 0.08, game.nextTickAnimationProgress),

@@ -8,7 +8,7 @@ export class Head extends Archetype {
   updateSequentialOrder = 0
   spawnOrderOrder = 1
 
-  dir = this.entityMemory(Number) //1 up ;3 down; 2 left; 0 right
+  dir = this.entityMemory(Number) //1 up ;3 down; 2 left; 4 right
   previousDir = this.entityMemory(Number)
   nextTick = this.entityMemory(Number)
   borderAlert = this.entityMemory(Boolean)
@@ -31,6 +31,9 @@ export class Head extends Archetype {
   initialize() {
     this.oldPos.x = pos.x
     this.oldPos.y = pos.y
+
+    this.dir=4
+
     archetypes.Body.spawn({})
 
     layout.dpadUp
@@ -51,9 +54,9 @@ export class Head extends Archetype {
     if (touch.vr > 1.5) {
       if (Math.abs(touch.sx - touch.x) > Math.abs(touch.sy - touch.y)) {
         if (touch.sx - touch.x > 0) {
-          if (game.dir != 0) this.dir = 2;
+          if (game.dir != 4) this.dir = 2;
         } else {
-          if (game.dir != 2) this.dir = 0;
+          if (game.dir != 2) this.dir = 4;
         }
       } else {
         if (touch.sy - touch.y > 0) {
@@ -73,9 +76,9 @@ export class Head extends Archetype {
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
         // Horizontal direction
         if (deltaX > 0) {
-          if (game.dir != 2) this.dir = 0; // Right
+          if (game.dir != 2) this.dir = 4; // Right
         } else {
-          if (game.dir != 0) this.dir = 2; // Left
+          if (game.dir != 4) this.dir = 2; // Left
         }
       } else {
         // Vertical direction
@@ -95,7 +98,7 @@ export class Head extends Archetype {
   }
 
   drawDpad() {
-    skin.sprites.buttonH.draw(this.dpadRight, 100, (this.dir === 0) ? 0.4 : 0.8)
+    skin.sprites.buttonH.draw(this.dpadRight, 100, (this.dir === 4) ? 0.4 : 0.8)
     skin.sprites.buttonH.draw(this.dpadLeft, 100, (this.dir === 2) ? 0.4 : 0.8)
     skin.sprites.buttonV.draw(this.dpadDown, 100, (this.dir === 3) ? 0.4 : 0.8)
     skin.sprites.buttonV.draw(this.dpadUp, 100, (this.dir === 1) ? 0.4 : 0.8)
@@ -126,7 +129,7 @@ export class Head extends Archetype {
       //move haed
 
       switch (game.dir) {
-        case 0: pos.x++; break
+        case 4: pos.x++; break
         case 2: pos.x--; break
         case 1: pos.y++; break
         case 3: pos.y--; break
