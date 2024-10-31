@@ -1,3 +1,4 @@
+import { effect } from "../effect.js";
 import { game } from "./Shared.js";
 
 export class Data extends Archetype {
@@ -27,11 +28,10 @@ export class Data extends Archetype {
   updateSequential() {
 
     if (game.dataIndex <= this.import.DataIndex * 16 && game.shouldSaveData) {
-      game.shouldSaveData=false
-      const t = Math.floor(time.now / 0.4)
-      const d = game.dir
-
-    
+      game.shouldSaveData = false
+      const t = game.tick
+      const d = (game.lose) ? 5 : game.dir
+effect.clips.test.play(0.02)
       switch (game.dataIndex % 16) {
         case 1:
           this.export("tick1", t)
@@ -98,7 +98,7 @@ export class Data extends Archetype {
         case 0:
           this.export("tick16", t)
           this.export("dir16", d)
-          this.despawn=true
+          this.despawn = true
           break;
       }
     }

@@ -42,7 +42,7 @@ export class Score extends Archetype {
         scaleToGrid(this.import.appleX),
         scaleToGrid(this.import.appleY)
       ),
-    1,
+    60,
     1)
   }
 }

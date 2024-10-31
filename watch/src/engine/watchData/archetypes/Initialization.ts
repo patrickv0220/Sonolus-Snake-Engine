@@ -1,4 +1,4 @@
-import { pos } from "./Shared.js"
+import { game, pos } from "./Shared.js"
 
 export class Initialization extends Archetype {
     preprocess() {
@@ -12,15 +12,15 @@ export class Initialization extends Archetype {
             background: true,
         })
 
-        ui.progress.set({
-            anchor: screen.rect.lb.add(new Vec(0.05, 0.05)),
-            pivot: { x: 0, y: 0 },
-            size: { x: screen.rect.w - 0.1, y: 0.15 * ui.configuration.progress.scale },
-            rotation: 0,
-            alpha: ui.configuration.progress.alpha,
-            horizontalAlign: HorizontalAlign.Center,
-            background: true,
-        })
+        // ui.progress.set({
+        //     anchor: screen.rect.lb.add(new Vec(0.05, 0.05)),
+        //     pivot: { x: 0, y: 0 },
+        //     size: { x: screen.rect.w - 0.1, y: 0.15 * ui.configuration.progress.scale },
+        //     rotation: 0,
+        //     alpha: ui.configuration.progress.alpha,
+        //     horizontalAlign: HorizontalAlign.Center,
+        //     background: true,
+        // })
     ui.combo.value.set({
       anchor: { x: screen.r * 0.75, y: -0.1 },
       pivot: { x: 0, y: 0 },
@@ -30,8 +30,8 @@ export class Initialization extends Archetype {
       horizontalAlign: HorizontalAlign.Center,
       background: true,
     })
-
-    pos.x=2
+game.tick=1
+    pos.x=1
     pos.y=3
     }
 }

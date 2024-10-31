@@ -7,7 +7,7 @@ export class Body extends SpawnableArchetype({}) {
   updateSequentialOrder = 1
 
   layout = this.entityMemory(Rect)
-  layoutShadow= this.entityMemory(Rect)
+  layoutShadow = this.entityMemory(Rect)
   x = this.entityMemory(Number)
   y = this.entityMemory(Number)
   dir = this.entityMemory(Number) //used for the despawn animation
@@ -16,10 +16,10 @@ export class Body extends SpawnableArchetype({}) {
 
 
   initialize() {
-    layout.sqaure.translate(tg(pos.x), tg(pos.y)+0.02)
+    layout.sqaure.translate(tg(pos.x), tg(pos.y) + 0.02)
       .copyTo(this.layout)
-    layout.line.translate(tg(pos.x),tg(pos.y)-0.07)
-    .copyTo(this.layoutShadow)
+    layout.line.translate(tg(pos.x), tg(pos.y) - 0.07)
+      .copyTo(this.layoutShadow)
     this.x = pos.x
     this.y = pos.y
     this.dir = -1 //-1 so that its only drawn the next tick
@@ -35,10 +35,12 @@ export class Body extends SpawnableArchetype({}) {
         this.tickLeft--
         if (this.tickLeft === 0) { this.despawn = true } else {
           //detect if the head hit the body.
-          if (this.x == pos.x && this.y == pos.y) { 
+          if (this.x == pos.x && this.y == pos.y) {
             game.lose = true
             effect.clips.die.play(0.02)
-            game.deathAnimationTarget = game.size }
+            game.deathAnimationTarget = game.size
+            game.shouldSaveData = true
+          }
         }
       } else if (this.tickLeft === 1) {
         this.despawn = true
@@ -63,12 +65,12 @@ export class Body extends SpawnableArchetype({}) {
     }
     if (this.dir != -1) {
       if (this.colour) { skin.sprites.bodyDark.draw(this.layout, 40, 1) } else { skin.sprites.bodyLight.draw(this.layout, 40, 1) }
-      skin.sprites.shadow.draw(this.layout.translate(0,-0.02),39,1)
+      skin.sprites.shadow.draw(this.layout.translate(0, -0.02), 39, 1)
     }
   }
 
 
-  TailDespawnAnimation() { 
+  TailDespawnAnimation() {
     switch (this.dir) {
       case 4:
         {
@@ -78,7 +80,7 @@ export class Body extends SpawnableArchetype({}) {
             b: -0.08,
             t: 0.08,
           })
-            .translate(tg(this.x), tg(this.y)+0.02)
+            .translate(tg(this.x), tg(this.y) + 0.02)
             .copyTo(this.layout)
         }
 
@@ -91,7 +93,7 @@ export class Body extends SpawnableArchetype({}) {
             b: Math.lerp(-0.08, 0.08, game.nextTickAnimationProgress),
             t: 0.08,
           })
-            .translate(tg(this.x), tg(this.y)+0.02)
+            .translate(tg(this.x), tg(this.y) + 0.02)
             .copyTo(this.layout)
         }
 
@@ -104,7 +106,7 @@ export class Body extends SpawnableArchetype({}) {
             b: -0.08,
             t: 0.08,
           })
-            .translate(tg(this.x), tg(this.y)+0.02)
+            .translate(tg(this.x), tg(this.y) + 0.02)
             .copyTo(this.layout)
         }
 
@@ -117,7 +119,7 @@ export class Body extends SpawnableArchetype({}) {
             b: -0.08,
             t: Math.lerp(0.08, -0.08, game.nextTickAnimationProgress),
           })
-            .translate(tg(this.x), tg(this.y)+0.02)
+            .translate(tg(this.x), tg(this.y) + 0.02)
             .copyTo(this.layout)
         }
         break;

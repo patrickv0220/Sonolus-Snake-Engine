@@ -17,7 +17,7 @@ export class Head extends Archetype {
     x: Number,
     y: Number
   })
- newApple = this.entityMemory({
+  newApple = this.entityMemory({
     x: Number,
     y: Number
   })
@@ -32,7 +32,7 @@ export class Head extends Archetype {
     this.oldPos.x = pos.x
     this.oldPos.y = pos.y
 
-    this.dir=4
+    this.dir = 4
 
     archetypes.Body.spawn({})
 
@@ -111,10 +111,11 @@ export class Head extends Archetype {
 
       game.isTick = true
       game.dir = this.dir
+      game.tick++
 
       if (game.dir != this.previousDir) {
         effect.clips.swipe.play(0.02)
-        game.shouldSaveData=true
+        game.shouldSaveData = true
         this.previousDir = game.dir
         game.dataIndex++
       }
@@ -148,6 +149,8 @@ export class Head extends Archetype {
         game.lose = true
         effect.clips.die.play(0.02)
         game.deathAnimationTarget = game.size
+        game.shouldSaveData = true
+
       }
       // horder animation 
       this.borderAlert = (Math.max(pos.x, pos.y) > 8 || Math.min(pos.x, pos.y) < 1)
@@ -158,11 +161,11 @@ export class Head extends Archetype {
     if (!apple.shouldSpawn && apple.shouldCheckSpawn) apple.shouldCheckSpawn = false
     //spawn apple
     if (apple.shouldSpawn) {
-      
+
       apple.shouldSpawn = false
       apple.shouldCheckSpawn = true
-    this.newApple.x = Math.randomInt(0, 9)
-      this.newApple.y= Math.randomInt(0, 9)
+      this.newApple.x = Math.randomInt(0, 9)
+      this.newApple.y = Math.randomInt(0, 9)
       if (this.newApple.x === apple.x && this.newApple.y === apple.y) {
         apple.x = (this.newApple.x + Math.randomInt(2, 4)) % 10
         apple.y = (this.newApple.y + Math.randomInt(2, 4)) % 10
