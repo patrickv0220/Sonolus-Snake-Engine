@@ -31,7 +31,7 @@ export class Data extends Archetype {
       game.shouldSaveData = false
       const t = game.tick
       const d = (game.lose) ? 5 : game.dir
-effect.clips.test.play(0.02)
+      //effect.clips.test.play(0.02)
       switch (game.dataIndex % 16) {
         case 1:
           this.export("tick1", t)
