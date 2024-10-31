@@ -9,10 +9,6 @@
   "title": {"en":"SNAKE"},
   "artists": {"en":" "},
   "author": {"en":"LBO44"},
-<<<<<<< Updated upstream
-  "tags": ["game","snake","arcade"],
-=======
   "tags": [],
->>>>>>> Stashed changes
   "description": {"en":"A simple Snake game I made for fun.\nSwipe to move. \nEat the apples to grow.\n Have Fun !"}
 }
