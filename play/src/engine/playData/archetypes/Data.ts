@@ -26,7 +26,7 @@ export class Data extends Archetype {
 
   updateSequential() {
 
-    if (game.dataIndex <= this.import.DataIndex * 16 && game.shouldSaveData) {
+    if (game.dataIndex >= (this.import.DataIndex-1) * 16&&game.dataIndex <= this.import.DataIndex * 16 && game.shouldSaveData) {
       game.shouldSaveData = false
       const t = game.tick
       const d = (game.lose) ? 5 : game.dir

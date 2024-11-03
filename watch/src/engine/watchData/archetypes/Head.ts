@@ -85,8 +85,7 @@ export class Head extends Archetype {
     }
 
     //lerp animatipn for head and body
-    game.nextTickAnimationProgress = (time.now % 0.4) / 0.4;
-
+    game.nextTickAnimationProgress = (time.now - this.nextTick + 0.4) * 2.5
     //draw head normm1l
     if (game.lose) skin.sprites.headDead.draw(layout.sqaure.translate(tg(pos.x), tg(pos.y)), 50, 1); else {
 
