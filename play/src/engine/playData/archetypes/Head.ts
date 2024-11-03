@@ -29,6 +29,8 @@ export class Head extends Archetype {
   dpadLeft = this.entityMemory(Rect)
 
   initialize() {
+    if (options.dpad) this.dpadInitialize()
+
     this.oldPos.x = pos.x
     this.oldPos.y = pos.y
 
@@ -36,18 +38,6 @@ export class Head extends Archetype {
 
     archetypes.Body.spawn({})
 
-    layout.dpadUp
-      .translate(screen.l + 0.45, screen.b + 0.45)
-      .copyTo(this.dpadUp)
-    layout.dpadDown
-      .translate(screen.l + 0.45, screen.b + 0.45)
-      .copyTo(this.dpadDown)
-    layout.dpadLeft
-      .translate(screen.l + 0.45, screen.b + 0.45)
-      .copyTo(this.dpadLeft)
-    layout.dpadRight
-      .translate(screen.l + 0.45, screen.b + 0.45)
-      .copyTo(this.dpadRight)
   }
 
   touchSwipe(touch: Touch) {
@@ -104,6 +94,20 @@ export class Head extends Archetype {
     skin.sprites.buttonV.draw(this.dpadUp, 100, (this.dir === 1) ? 0.4 : 0.8)
   }
 
+  dpadInitialize() {
+    layout.dpadUp
+      .translate(screen.l + 0.45, screen.b + 0.45)
+      .copyTo(this.dpadUp)
+    layout.dpadDown
+      .translate(screen.l + 0.45, screen.b + 0.45)
+      .copyTo(this.dpadDown)
+    layout.dpadLeft
+      .translate(screen.l + 0.45, screen.b + 0.45)
+      .copyTo(this.dpadLeft)
+    layout.dpadRight
+      .translate(screen.l + 0.45, screen.b + 0.45)
+      .copyTo(this.dpadRight)
+  }
   updateSequential() {
     game.isTick = false
     if (this.nextTick < time.now && !game.lose) {
@@ -115,9 +119,9 @@ export class Head extends Archetype {
 
       if (game.dir != this.previousDir) {
         effect.clips.swipe.play(0.02)
+        game.dataIndex++
         game.shouldSaveData = true
         this.previousDir = game.dir
-        game.dataIndex++
       }
 
       this.oldPos.x = pos.x
@@ -149,10 +153,11 @@ export class Head extends Archetype {
         game.lose = true
         effect.clips.die.play(0.02)
         game.deathAnimationTarget = game.size
+        game.dataIndex++
         game.shouldSaveData = true
 
       }
-      // horder animation 
+      // border animation 
       this.borderAlert = (Math.max(pos.x, pos.y) > 8 || Math.min(pos.x, pos.y) < 1)
     }
 

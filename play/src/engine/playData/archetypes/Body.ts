@@ -39,6 +39,7 @@ export class Body extends SpawnableArchetype({}) {
             game.lose = true
             effect.clips.die.play(0.02)
             game.deathAnimationTarget = game.size
+            game.dataIndex++
             game.shouldSaveData = true
           }
         }

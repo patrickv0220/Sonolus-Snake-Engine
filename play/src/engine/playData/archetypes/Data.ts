@@ -18,9 +18,8 @@ export class Data extends Archetype {
   })
   export = this.defineExport(this.exportDataTickDir)
 
-  spawnOrder(): number {
-    return 2
-  }
+  spawnOrderOrder = 3
+
   shouldSpawn() {
     return true
   }
@@ -31,7 +30,9 @@ export class Data extends Archetype {
       game.shouldSaveData = false
       const t = game.tick
       const d = (game.lose) ? 5 : game.dir
-      //effect.clips.test.play(0.02)
+
+      if (debug.enabled) effect.clips.test.play(0.02)
+
       switch (game.dataIndex % 16) {
         case 1:
           this.export("tick1", t)
@@ -76,12 +77,10 @@ export class Data extends Archetype {
         case 11:
           this.export("tick11", t)
           this.export("dir11", d)
-          debug.log(11)
           break;
         case 12:
           this.export("tick12", t)
           this.export("dir12", d)
-          debug.log(d)
           break;
         case 13:
           this.export("tick13", t)

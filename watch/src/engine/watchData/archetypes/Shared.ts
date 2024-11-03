@@ -9,6 +9,7 @@ export const game = levelMemory({
   tick: Number,
   dir: Number,
   nextDir: Number,
+  nextTick: Number,
   size: Number,
   lose: Boolean,
   nextTickAnimationProgress: Number,//used for the lerp animation when drawiing movinng head and tai
