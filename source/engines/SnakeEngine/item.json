@@ -3,7 +3,7 @@
     "title": {"en":"SNAKE"},
     "subtitle": {"en":"A Simple Snake Game Engine"},
     "author": {"en":"LBO44"},
-    "skin": "SnakeSkinHalloween",
+    "skin": "SnakeSkin",
     "background": "darkblue",
     "effect": "8bit",
     "particle": "none",
