@@ -57,16 +57,16 @@ export class Head extends Archetype {
   updateSequential() {
 
     game.isTick = false
+        this.dir = game.nextDir
+        game.dir = this.dir
     if (this.nextTick < time.now && !game.lose) {
       this.nextTick = time.now + 0.4
       this.tick++
       debug.log(this.tick)
       debug.log(game.nextTick)
       game.isTick = true
-      if (this.tick >= game.nextTick) {
-        this.dir = game.nextDir
-        game.dir = this.dir
-      }
+     // if (this.tick-1 >= game.nextTick) {
+     // }
       if (game.dir == 5) game.lose = true
       this.oldPos.x = pos.x
       this.oldPos.y = pos.y

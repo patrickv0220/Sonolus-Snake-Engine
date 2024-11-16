@@ -11,6 +11,7 @@ export class Data extends Archetype {
         [`dir${i}`, { name: `dir${i}`, type: Number }],
       ];
     }).flat()
+    ,
   ) as Record<`tick${number}` | `dir${number}`, { name: string; type: NumberConstructor }>;
 
 
@@ -98,7 +99,7 @@ export class Data extends Archetype {
       this.testTick = this.import.tick2
       return;
     }
-    if (this.import.tick1 != 0 && this.import.tick1 <= t) {
+    if (this.import.tick1 != 0 && this.import.tick1-1 <= t) {
       this.testDir = this.import.dir1;
       this.testTick = this.import.tick1
       return;
@@ -114,14 +115,14 @@ export class Data extends Archetype {
     }
   }
   spawnTime() {
-    return (this.import.tick1 == 0) ? -999 : (this.import.tick1) * 0.4 - 0.2
+    return (this.import.tick1 == 0) ? -999 : (this.import.tick1) * 0.4 -0.05
   }
 
   despawnTime() {
     if (this.import.tick1 == 0) {
-      return -9999999
+      return -999
     } else {
-      return (this.import.tick16 == 0) ? 999999 : (this.import.tick16) * 0.4 + 0.1
+      return (this.import.tick16 == 0) ? 999999 : (this.import.tick16) * 0.4 + 0.15
     }
   }
 }
