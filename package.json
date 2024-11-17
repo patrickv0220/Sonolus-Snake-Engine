@@ -14,15 +14,16 @@
     "type-check": "tsc -p ./shared --noEmit && tsc -p ./play --noEmit && tsc -p ./watch --noEmit && tsc -p ./preview --noEmit && tsc -p ./tutorial --noEmit",
     "buildAll": "sonolus-cli --build ./play && sonolus-cli --build ./watch && sonolus-cli --build ./preview && sonolus-cli --build ./tutorial",
     "build": "sonolus-cli --build ./play && sonolus-cli --build ./watch",
-    "static":  "sonolus-cli --build ./play && sonolus-cli --build ./watch && cp ./dist/EnginePlayData ./source/engines/SnakeEngine/playData && cp ./dist/EngineWatchData ./source/engines/SnakeEngine/watchData && cp ./dist/EngineConfiguration ./source/engines/SnakeEngine/configuration && sonolus-pack && sonolus-generate-static -a https://lbo44.github.io/Sonolus-Snake-Engine/"
+    "static": "sonolus-cli --build ./play && sonolus-cli --build ./watch && cp ./dist/EnginePlayData ./source/engines/SnakeEngine/playData && cp ./dist/EngineWatchData ./source/engines/SnakeEngine/watchData && cp ./dist/EngineConfiguration ./source/engines/SnakeEngine/configuration && sonolus-pack && sonolus-generate-static -a https://lbo44.github.io/Sonolus-Snake-Engine/ && cp ./web/. -r ./static"
   },
   "dependencies": {
-    "@sonolus/core": "~7.9.1"
+    "@sonolus/core": "~7.9.1",
+    "@sonolus/express": "^7.2.0"
   },
   "devDependencies": {
-    "@sonolus/sonolus.js": "~9.5.0",
+    "@sonolus/generate-static": "5.4.4",
     "@sonolus/pack": "5.4.4",
-    "@sonolus/generate-static":"5.4.4",
+    "@sonolus/sonolus.js": "~9.5.0",
     "typescript": "~5.5.4"
   }
 }

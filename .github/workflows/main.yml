@@ -26,6 +26,15 @@ jobs:
       with:
         name: github-pages
         path: static
+    - name: remove useless buttons in sonolus info
+      run: |
+        node -e "
+        const fs = require('fs');
+        const filePath = './static/sonolus/info';
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        data.buttons = data.buttons.filter(button => 
+          !['post', 'playlist', 'replay', 'background', 'effect', 'particle'].includes(button.type));
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 4), 'utf-8');"
 
   deploy:
     needs: build
