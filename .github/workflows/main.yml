@@ -21,11 +21,6 @@ jobs:
       run: |
         npm install
         npm run static
-    - name: export static
-      uses: actions/upload-pages-artifact@v3
-      with:
-        name: github-pages
-        path: static
     - name: remove useless buttons in sonolus info
       run: |
         node -e "
@@ -35,7 +30,11 @@ jobs:
         data.buttons = data.buttons.filter(button => 
           !['post', 'playlist', 'replay', 'background', 'effect', 'particle'].includes(button.type));
         fs.writeFileSync(filePath, JSON.stringify(data, null, 4), 'utf-8');"
-
+    - name: export static
+      uses: actions/upload-pages-artifact@v3
+      with:
+        name: github-pages
+        path: static
   deploy:
     needs: build
     environment:
