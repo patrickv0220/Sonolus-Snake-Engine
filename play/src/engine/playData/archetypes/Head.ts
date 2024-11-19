@@ -111,9 +111,10 @@ export class Head extends Archetype {
       .copyTo(this.dpadRight)
   }
   updateSequential() {
+    debug.log(game.tickDuration)
     game.isTick = false
     if (this.nextTick < time.now && !game.lose) {
-      this.nextTick = time.now + 0.4
+      this.nextTick = time.now + game.tickDuration
       this.hasWrapped = false
 
       game.isTick = true
@@ -151,6 +152,7 @@ export class Head extends Archetype {
         effect.clips.eat.play(0.02)
         archetypes.ScoreEffect.spawn({})
         apple.shouldSpawn = true
+        if (game.size%5==0) game.tickDuration=Math.max(0.1,game.tickDuration-0.025)
       }
 
       //hit wall
@@ -196,7 +198,7 @@ export class Head extends Archetype {
 
     if (!game.lose) {
       //lerp animatipn for head and body
-      game.nextTickAnimationProgress = (time.now - this.nextTick + 0.4) * 2.5
+      game.nextTickAnimationProgress = (time.now - this.nextTick + game.tickDuration) / game.tickDuration
 
       //draw head normmal
       if (this.hasWrapped) {

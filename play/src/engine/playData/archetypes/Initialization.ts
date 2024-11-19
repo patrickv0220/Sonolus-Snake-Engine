@@ -32,6 +32,7 @@ export class Initialization extends Archetype {
     apple.shouldSpawn = true
     pos.x = 1
     pos.y = 3
+    game.tickDuration=0.4
   }
 
   updateSequential() {

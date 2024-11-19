@@ -9,6 +9,7 @@ export const game = levelMemory({
   isTick: Boolean,
   shouldSaveData: Boolean,
   tick: Number,
+  tickDuration: Number,
   dir: Number,
   size: Number,
   lose: Boolean,
