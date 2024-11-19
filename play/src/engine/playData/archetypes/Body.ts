@@ -62,7 +62,7 @@ export class Body extends SpawnableArchetype({}) {
         layout.sqaure.translate(tg(this.x), tg(this.y) + y - 0.16).copyTo(this.layout)
       }
     } else {
-      if (this.tickLeft === 1) this.TailDespawnAnimation()
+      if (this.tickLeft === 1) this.TailDespawnAnimation(this.dir)
     }
     if (this.dir != -1) {
       if (this.colour) { skin.sprites.bodyDark.draw(this.layout, 40, 1) } else { skin.sprites.bodyLight.draw(this.layout, 40, 1) }
@@ -71,12 +71,13 @@ export class Body extends SpawnableArchetype({}) {
   }
 
 
-  TailDespawnAnimation() {
-    switch (this.dir) {
+  TailDespawnAnimation(dir: Number) {
+    const p = game.nextTickAnimationProgress;
+    switch (dir) {
       case 4:
         {
           new Rect({
-            l: Math.lerp(-0.08, 0.08, game.nextTickAnimationProgress),
+            l: Math.lerp(-0.08, 0.08, p),
             r: 0.08,
             b: -0.08,
             t: 0.08,
@@ -91,7 +92,7 @@ export class Body extends SpawnableArchetype({}) {
           new Rect({
             l: -0.08,
             r: 0.08,
-            b: Math.lerp(-0.08, 0.08, game.nextTickAnimationProgress),
+            b: Math.lerp(-0.08, 0.08, p),
             t: 0.08,
           })
             .translate(tg(this.x), tg(this.y) + 0.02)
@@ -103,7 +104,7 @@ export class Body extends SpawnableArchetype({}) {
         {
           new Rect({
             l: -0.08,
-            r: Math.lerp(0.08, -0.08, game.nextTickAnimationProgress),
+            r: Math.lerp(0.08, -0.08, p),
             b: -0.08,
             t: 0.08,
           })
@@ -118,7 +119,7 @@ export class Body extends SpawnableArchetype({}) {
             l: -0.08,
             r: 0.08,
             b: -0.08,
-            t: Math.lerp(0.08, -0.08, game.nextTickAnimationProgress),
+            t: Math.lerp(0.08, -0.08, p),
           })
             .translate(tg(this.x), tg(this.y) + 0.02)
             .copyTo(this.layout)

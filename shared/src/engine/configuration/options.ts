@@ -2,9 +2,15 @@ import { EngineConfigurationOption } from '@sonolus/core'
 
 export const optionsDefinition = {
   dpad: {
-    name: "movement method",
+    name: "Movement Method",
     type: "select",
     def: 0,
-    values: ["swipe", "dpad"]
+    values: ["Swipe", "Dpad"]
+  },
+  noWall: {
+    name: "Disable Walls",
+    type: "toggle",
+    def: 0,
+    standard: true,
   }
 } satisfies Record<string, EngineConfigurationOption>

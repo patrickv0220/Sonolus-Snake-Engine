@@ -12,6 +12,7 @@ export class Head extends Archetype {
   previousDir = this.entityMemory(Number)
   nextTick = this.entityMemory(Number)
   borderAlert = this.entityMemory(Boolean)
+  hasWrapped = this.entityMemory(Boolean)
   blink = this.entityMemory(Number)
   oldPos = this.entityMemory({
     x: Number,
@@ -22,6 +23,7 @@ export class Head extends Archetype {
     y: Number
   })
 
+  layoutAppear = this.entityMemory(Rect) //used for the tp animatipn with the no walls option
 
   dpadDown = this.entityMemory(Rect)
   dpadUp = this.entityMemory(Rect)
@@ -112,6 +114,7 @@ export class Head extends Archetype {
     game.isTick = false
     if (this.nextTick < time.now && !game.lose) {
       this.nextTick = time.now + 0.4
+      this.hasWrapped = false
 
       game.isTick = true
       game.dir = this.dir
@@ -140,6 +143,8 @@ export class Head extends Archetype {
         case 3: pos.y--; break
       }
 
+
+
       //eat apple
       if (apple.x == pos.x && apple.y == pos.y) {
         game.size++;
@@ -150,15 +155,23 @@ export class Head extends Archetype {
 
       //hit wall
       if (Math.max(pos.x, pos.y) > 9 || Math.min(pos.x, pos.y) < 0) {
-        game.lose = true
-        effect.clips.die.play(0.02)
-        game.deathAnimationTarget = game.size
-        game.dataIndex++
-        game.shouldSaveData = true
+        if (options.noWall) {
+          //wrap to the other side
+          pos.x = ((pos.x % 10) + 10) % 10
+          pos.y = ((pos.y % 10) + 10) % 10
 
+          this.hasWrapped = true
+        } else {
+
+          game.lose = true
+          effect.clips.die.play(0.02)
+          game.deathAnimationTarget = game.size
+          game.dataIndex++
+          game.shouldSaveData = true
+        }
       }
       // border animation 
-      this.borderAlert = (Math.max(pos.x, pos.y) > 8 || Math.min(pos.x, pos.y) < 1)
+      if (!options.noWall) this.borderAlert = (Math.max(pos.x, pos.y) > 8 || Math.min(pos.x, pos.y) < 1)
     }
 
 
@@ -185,21 +198,29 @@ export class Head extends Archetype {
       //lerp animatipn for head and body
       game.nextTickAnimationProgress = (time.now - this.nextTick + 0.4) * 2.5
 
-      //draw head normm1l
-      skin.sprites.head.draw(
-        layout.sqaure.translate(
+      //draw head normmal
+      if (this.hasWrapped) {
+        this.HeadAppearAnimation(game.dir)
+        skin.sprites.head.draw(this.layoutAppear, 50, 1)
+        skin.sprites.shadow.draw(this.layoutAppear.translate(0, -0.02), 39, 1)
+
+      } else {
+        skin.sprites.head.draw(
+          layout.sqaure.translate(
+            tg(Math.lerp(this.oldPos.x, pos.x, game.nextTickAnimationProgress)),
+            tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) + 0.02,
+          ), 50, 1)
+
+
+        //eyelid  
+        const a = Math.max(0, Math.min(0.04, (((this.blink - time.now) * -1) * 0.05)))
+        skin.sprites.eyelid.draw(layout.line.translate(
           tg(Math.lerp(this.oldPos.x, pos.x, game.nextTickAnimationProgress)),
-          tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) + 0.02,
-        ), 50, 1)
+          tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) + 0.09 - a),
+          51, 1)
+        skin.sprites.shadow.draw(layout.line.translate(tg(Math.lerp(this.oldPos.x, pos.x, game.nextTickAnimationProgress)), tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) - 0.07), 39, 1)
+      }
 
-      //eyelid  
-      const a = Math.max(0, Math.min(0.04, (((this.blink - time.now) * -1) * 0.05)))
-      skin.sprites.eyelid.draw(layout.line.translate(
-        tg(Math.lerp(this.oldPos.x, pos.x, game.nextTickAnimationProgress)),
-        tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) + 0.09 - a),
-        51, 1)
-
-      skin.sprites.shadow.draw(layout.line.translate(tg(Math.lerp(this.oldPos.x, pos.x, game.nextTickAnimationProgress)), tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) - 0.07), 39, 1)
 
       if (this.borderAlert && (Math.floor(time.now * 5) % 2 === 0)) skin.sprites.borderDanger.draw(layout.gridBorder, 1, 0.5)
 
@@ -237,5 +258,62 @@ export class Head extends Archetype {
     skin.sprites.border.draw(layout.gridBorder, 0, 1)
 
     if (options.dpad) this.drawDpad()
+  }
+
+  HeadAppearAnimation(dir: Number) {
+    const p = game.nextTickAnimationProgress;
+    switch (dir) {
+      case 2:
+        {
+          new Rect({
+            l: Math.lerp(0.08, - 0.08, p),
+            r: 0.08,
+            b: -0.08,
+            t: 0.08,
+          })
+            .translate(tg(pos.x), tg(pos.y) + 0.02)
+            .copyTo(this.layoutAppear)
+        }
+
+        break;
+      case 3:
+        {
+          new Rect({
+            l: -0.08,
+            r: 0.08,
+            b: Math.lerp(0.08, -0.08, p),
+            t: 0.08,
+          })
+            .translate(tg(pos.x), tg(pos.y) + 0.02)
+            .copyTo(this.layoutAppear)
+        }
+
+        break;
+      case 4:
+        {
+          new Rect({
+            l: -0.08,
+            r: Math.lerp(-0.08, 0.08, p),
+            b: -0.08,
+            t: 0.08,
+          })
+            .translate(tg(pos.x), tg(pos.y) + 0.02)
+            .copyTo(this.layoutAppear)
+        }
+
+        break;
+      case 1:
+        {
+          new Rect({
+            l: -0.08,
+            r: 0.08,
+            b: -0.08,
+            t: Math.lerp(-0.08, 0.08, p),
+          })
+            .translate(tg(pos.x), tg(pos.y) + 0.02)
+            .copyTo(this.layoutAppear)
+        }
+        break;
+    }
   }
 }
