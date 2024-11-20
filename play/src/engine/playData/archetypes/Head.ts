@@ -1,7 +1,7 @@
 import { options } from "../../configuration/options.js";
 import { effect } from "../effect.js";
 import { skin } from "../skin.js"
-import { pos, game, scaleToGrid as tg, apple, layout } from "./Shared.js"
+import { pos, game, scaleToGrid as tg, apple, layout, floatingEffect, death } from "./Shared.js"
 import { archetypes } from "./index.js";
 
 export class Head extends Archetype {
@@ -27,8 +27,8 @@ export class Head extends Archetype {
 
   dpadDown = this.entityMemory(Rect)
   dpadUp = this.entityMemory(Rect)
-  dpadRight = this.entityMemory(Rect)
-  dpadLeft = this.entityMemory(Rect)
+  dpadRight = this.entityMemory(Quad)
+  dpadLeft = this.entityMemory(Quad)
 
   initialize() {
     if (options.dpad) this.dpadInitialize()
@@ -90,10 +90,10 @@ export class Head extends Archetype {
   }
 
   drawDpad() {
-    skin.sprites.buttonH.draw(this.dpadRight, 100, (this.dir === 4) ? 0.4 : 0.8)
-    skin.sprites.buttonH.draw(this.dpadLeft, 100, (this.dir === 2) ? 0.4 : 0.8)
-    skin.sprites.buttonV.draw(this.dpadDown, 100, (this.dir === 3) ? 0.4 : 0.8)
-    skin.sprites.buttonV.draw(this.dpadUp, 100, (this.dir === 1) ? 0.4 : 0.8)
+    skin.sprites.button.draw(this.dpadRight, 100, (this.dir === 4) ? 0.4 : 0.8)
+    skin.sprites.button.draw(this.dpadLeft, 100, (this.dir === 2) ? 0.4 : 0.8)
+    skin.sprites.button.draw(this.dpadDown, 100, (this.dir === 3) ? 0.4 : 0.8)
+    skin.sprites.button.draw(this.dpadUp, 100, (this.dir === 1) ? 0.4 : 0.8)
   }
 
   dpadInitialize() {
@@ -111,7 +111,6 @@ export class Head extends Archetype {
       .copyTo(this.dpadRight)
   }
   updateSequential() {
-    debug.log(game.tickDuration)
     game.isTick = false
     if (this.nextTick < time.now && !game.lose) {
       this.nextTick = time.now + game.tickDuration
@@ -144,17 +143,6 @@ export class Head extends Archetype {
         case 3: pos.y--; break
       }
 
-
-
-      //eat apple
-      if (apple.x == pos.x && apple.y == pos.y) {
-        game.size++;
-        effect.clips.eat.play(0.02)
-        archetypes.ScoreEffect.spawn({})
-        apple.shouldSpawn = true
-        if (game.size%5==0) game.tickDuration=Math.max(0.1,game.tickDuration-0.025)
-      }
-
       //hit wall
       if (Math.max(pos.x, pos.y) > 9 || Math.min(pos.x, pos.y) < 0) {
         if (options.noWall) {
@@ -163,19 +151,20 @@ export class Head extends Archetype {
           pos.y = ((pos.y % 10) + 10) % 10
 
           this.hasWrapped = true
-        } else {
-
-          game.lose = true
-          effect.clips.die.play(0.02)
-          game.deathAnimationTarget = game.size
-          game.dataIndex++
-          game.shouldSaveData = true
-        }
+        } else death()
       }
       // border animation 
       if (!options.noWall) this.borderAlert = (Math.max(pos.x, pos.y) > 8 || Math.min(pos.x, pos.y) < 1)
     }
 
+    //eat apple
+    if (apple.x == pos.x && apple.y == pos.y) {
+      game.size++;
+      effect.clips.eat.play(0.02)
+      archetypes.ScoreEffect.spawn({})
+      apple.shouldSpawn = true
+      if (game.size % 5 == 0) game.tickDuration = Math.max(0.1, game.tickDuration - 0.025)
+    }
 
     //make sure apple didnt spawn in body
     if (!apple.shouldSpawn && apple.shouldCheckSpawn) apple.shouldCheckSpawn = false
@@ -224,20 +213,13 @@ export class Head extends Archetype {
       }
 
 
-      if (this.borderAlert && (Math.floor(time.now * 5) % 2 === 0)) skin.sprites.borderDanger.draw(layout.gridBorder, 1, 0.5)
+      if (this.borderAlert && (Math.floor(time.now * 5) % 2 === 0)) skin.sprites.borderDanger.draw(layout.gridBorder, 4, 0.5)
 
 
 
-    } else {
-      //when game over
-      if (this.nextTick < time.now) {
-        this.nextTick = time.now + 0.2
-        game.deathAnimationTarget--
-        if (game.deathAnimationTarget <= 0) game.loseScore = true
-      }
-      game.nextTickAnimationProgress = (time.now - this.nextTick + 0.2
-      ) * 5
-
+    } else { //when game over
+      const shake= Math.pow(Math.max(game.deathTime+1-time.now,0)*0.1,2)
+       skin.sprites.grid.draw(layout.grid.translate(Math.randomFloat(-shake,shake),Math.randomFloat(-shake,shake)), 2, 1)
       //draw head dead 💀
       skin.sprites.headDead.draw(
         layout.sqaure.translate(tg(this.oldPos.x), tg(this.oldPos.y) + 0.02),
@@ -245,19 +227,20 @@ export class Head extends Archetype {
       skin.sprites.shadow.draw(
         layout.line.translate(tg(this.oldPos.x), tg(this.oldPos.y) - 0.07),
         39, 1)
+     if (time.now>=game.deathTime+game.size*0.3-1) game.loseScore=true
     }
 
     //draw apple 🍎
     if (!apple.shouldCheckSpawn && !apple.shouldSpawn) {
       skin.sprites.apple.draw(
-        layout.sqaure.translate(tg(apple.x), tg(apple.y)),
+        floatingEffect(layout.sqaure).translate(tg(apple.x), tg(apple.y) + 0.02),
         50,
         1
       );
     }
     //draw gride
-    skin.sprites.grid.draw(layout.grid, 2, 1)
-    skin.sprites.border.draw(layout.gridBorder, 0, 1)
+    skin.sprites.grid.draw(layout.grid, 1, 1)
+    skin.sprites.border.draw(layout.gridBorder, 3, 1)
 
     if (options.dpad) this.drawDpad()
   }
@@ -319,3 +302,4 @@ export class Head extends Archetype {
     }
   }
 }
+

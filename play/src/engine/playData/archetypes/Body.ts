@@ -1,6 +1,5 @@
-import { effect } from "../effect.js";
 import { skin } from "../skin.js";
-import { apple, game, layout, pos, scaleToGrid as tg } from "./Shared.js";
+import { apple, death, game, layout, pos, scaleToGrid as tg } from "./Shared.js";
 
 export class Body extends SpawnableArchetype({}) {
 
@@ -35,13 +34,7 @@ export class Body extends SpawnableArchetype({}) {
         this.tickLeft--
         if (this.tickLeft === 0) { this.despawn = true } else {
           //detect if the head hit the body.
-          if (this.x == pos.x && this.y == pos.y) {
-            game.lose = true
-            effect.clips.die.play(0.02)
-            game.deathAnimationTarget = game.size
-            game.dataIndex++
-            game.shouldSaveData = true
-          }
+          if (this.x == pos.x && this.y == pos.y) death()
         }
       } else if (this.tickLeft === 1) {
         this.despawn = true
@@ -57,9 +50,10 @@ export class Body extends SpawnableArchetype({}) {
   updateParallel() {
     //draw the body part
     if (game.lose) {
-      if (game.deathAnimationTarget === this.tickLeft) {
-        const y = Math.abs(0.2 - Math.abs(Math.lerp(-0.02, 0.02, game.nextTickAnimationProgress)))
-        layout.sqaure.translate(tg(this.x), tg(this.y) + y - 0.16).copyTo(this.layout)
+      const p = time.now - game.deathTime - ((game.size - this.tickLeft) * 0.3)
+      if (p >= 0 && p <= 0.3) {
+        const y = Math.max(0, 0.02 * Math.sin(p / 0.2 * Math.PI)) + 0.02
+        layout.sqaure.translate(tg(this.x), tg(this.y) + y).copyTo(this.layout)
       }
     } else {
       if (this.tickLeft === 1) this.TailDespawnAnimation(this.dir)
@@ -128,4 +122,4 @@ export class Body extends SpawnableArchetype({}) {
     }
   }
 
-} 
+}
