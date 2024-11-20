@@ -28,7 +28,7 @@ export class Initialization extends Archetype {
       background: true,
     })
 
-    game.size = 6
+    game.size = 3
     apple.shouldSpawn = true
     pos.x = 1
     pos.y = 3
