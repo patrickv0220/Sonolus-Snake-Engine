@@ -17,7 +17,7 @@ If you really want to try out this buggy snake game, you can add the following s
     - [ ] add progress bar to allow jumping to any moment of the replay
 - [ ] improve visuals ✨
     - [ ] fix death animation
-    - [ ] screen shake/vibration
+    - [x] screen shake/vibration
     - [x] make the eyes randomly blink
     - [ ] apple eating animation
 - [ ] tutorial mode (maybe?) 📖

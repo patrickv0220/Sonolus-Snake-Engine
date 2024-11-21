@@ -21,6 +21,7 @@ jobs:
       run: |
         npm install
         npm run static
+
     - name: remove useless buttons in sonolus info
       run: |
         node -e "
@@ -29,7 +30,40 @@ jobs:
         const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
         data.buttons = data.buttons.filter(button => 
           !['post', 'playlist', 'replay', 'background', 'effect', 'particle'].includes(button.type));
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 4), 'utf-8');"
+        fs.writeFileSync(filePath, JSON.stringify(data), 'utf-8');"
+
+    - name: update levels info
+      run: |
+        node -e "const fs = require('fs');
+        const postsPath = './static/sonolus/posts/info';
+        const levelsPath = './static/sonolus/levels/info';
+
+        const postItem = JSON.parse(fs.readFileSync(postsPath, 'utf-8')).sections[0]?.items || [];
+        const levelsData = JSON.parse(fs.readFileSync(levelsPath, 'utf-8'));
+
+        levelsData.sections[0].title = 'The Game'
+        levelsData.sections.push({
+         title: 'Announcement',
+         itemType: 'post',
+         items: postItem 
+          });
+
+        fs.writeFileSync(levelsPath, JSON.stringify(levelsData), 'utf-8');"
+
+    - name: remove useless recommended category
+      run: |
+        node -e "const fs = require('fs'); 
+        const filePaths = [
+        './static/sonolus/levels/snake',
+        './static/sonolus/posts/SnakeWelcome',
+        './static/sonolus/engines/SnakeEngine'];
+
+        filePaths.forEach(filePath => {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+        data.sections = [];
+        fs.writeFileSync(filePath, JSON.stringify(data), 'utf-8');
+        });
+        "
     - name: export static
       uses: actions/upload-pages-artifact@v3
       with:

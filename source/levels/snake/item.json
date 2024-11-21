@@ -9,6 +9,6 @@
   "title": {"en":"SNAKE"},
   "artists": {"en":" "},
   "author": {"en":"LBO44"},
-  "tags": [],
+  "tags": [{"title":{"en":"Snake"}},{"title":{"en":"Arcade"}}],
   "description": {"en":"A simple Snake game I made for fun.\nSwipe to move. \nEat the apples to grow.\nHave Fun !"}
 }
