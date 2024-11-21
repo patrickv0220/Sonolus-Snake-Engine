@@ -13,8 +13,8 @@ export const game = levelMemory({
   tickDuration: Number,
   dir: Number,
   size: Number,
-  lose: Boolean, //dispawn the score entities onxe the dzath anumation is complete
-  loseScore: Boolean,
+  lose: Boolean,
+  loseScore: Boolean, //dispawn the score entities once the death anumation is complete
   deathTime: Number,
   nextTickAnimationProgress: Number,//used for the lerp animation when drawiing movinng head and tail and for the death animation
   bodyColour: Boolean,//used to alternate the body colours

@@ -14,14 +14,8 @@ export class Head extends Archetype {
   borderAlert = this.entityMemory(Boolean)
   hasWrapped = this.entityMemory(Boolean)
   blink = this.entityMemory(Number)
-  oldPos = this.entityMemory({
-    x: Number,
-    y: Number
-  })
-  newApple = this.entityMemory({
-    x: Number,
-    y: Number
-  })
+  oldPos = this.entityMemory({ x: Number, y: Number })
+  newApple = this.entityMemory({ x: Number, y: Number })
 
   layoutAppear = this.entityMemory(Rect) //used for the tp animatipn with the no walls option
 
@@ -39,7 +33,6 @@ export class Head extends Archetype {
     this.dir = 4
 
     archetypes.Body.spawn({})
-
   }
 
   touchSwipe(touch: Touch) {
@@ -110,54 +103,52 @@ export class Head extends Archetype {
       .translate(screen.l + 0.45, screen.b + 0.45)
       .copyTo(this.dpadRight)
   }
-  updateSequential() {
-    game.isTick = false
-    if (this.nextTick < time.now && !game.lose) {
-      this.nextTick = time.now + game.tickDuration
-      this.hasWrapped = false
 
-      game.isTick = true
-      game.dir = this.dir
-      game.tick++
+  onTick() {
+    this.hasWrapped = false
 
-      if (game.dir != this.previousDir) {
-        effect.clips.swipe.play(0.02)
-        game.dataIndex++
-        game.shouldSaveData = true
-        this.previousDir = game.dir
-      }
+    game.isTick = true
+    game.dir = this.dir
+    game.tick++
 
-      this.oldPos.x = pos.x
-      this.oldPos.y = pos.y
-
-      if (Math.random() >= 0.08) this.blink = time.now + 0.5 //randomly blink
-
-      game.bodyColour = !game.bodyColour
-      archetypes.Body.spawn({})
-      //move haed
-
-      switch (game.dir) {
-        case 4: pos.x++; break
-        case 2: pos.x--; break
-        case 1: pos.y++; break
-        case 3: pos.y--; break
-      }
-
-      //hit wall
-      if (Math.max(pos.x, pos.y) > 9 || Math.min(pos.x, pos.y) < 0) {
-        if (options.noWall) {
-          //wrap to the other side
-          pos.x = ((pos.x % 10) + 10) % 10
-          pos.y = ((pos.y % 10) + 10) % 10
-
-          this.hasWrapped = true
-        } else death()
-      }
-      // border animation 
-      if (!options.noWall) this.borderAlert = (Math.max(pos.x, pos.y) > 8 || Math.min(pos.x, pos.y) < 1)
+    //when the direction changes
+    if (game.dir != this.previousDir) {
+      effect.clips.swipe.play(0.02)
+      game.dataIndex++
+      game.shouldSaveData = true
+      this.previousDir = game.dir
     }
 
-    //eat apple
+    //randomly blink 👁️
+    if (Math.random() >= 0.08) this.blink = time.now + 0.5
+
+    game.bodyColour = !game.bodyColour
+    archetypes.Body.spawn({})
+
+    //move haed ➡️
+    this.oldPos.x = pos.x
+    this.oldPos.y = pos.y
+    switch (game.dir) {
+      case 4: pos.x++; break
+      case 2: pos.x--; break
+      case 1: pos.y++; break
+      case 3: pos.y--; break
+    }
+
+    //hit wall 🧱
+    if (Math.max(pos.x, pos.y) > 9 || Math.min(pos.x, pos.y) < 0) {
+      if (options.noWall) {
+        //wrap to the other side
+        pos.x = ((pos.x % 10) + 10) % 10
+        pos.y = ((pos.y % 10) + 10) % 10
+        this.hasWrapped = true
+      } else death()
+    }
+
+    // border animation 
+    if (!options.noWall) this.borderAlert = (Math.max(pos.x, pos.y) > 8 || Math.min(pos.x, pos.y) < 1)
+
+    //eat apple 🍏
     if (apple.x == pos.x && apple.y == pos.y) {
       game.size++;
       effect.clips.eat.play(0.02)
@@ -165,17 +156,26 @@ export class Head extends Archetype {
       apple.shouldSpawn = true
       if (game.size % 5 == 0) game.tickDuration = Math.max(0.1, game.tickDuration - 0.025)
     }
+  }
 
-    //make sure apple didnt spawn in body
+  updateSequential() {
+    game.isTick = false
+    if (this.nextTick < time.now && !game.lose) {
+      this.nextTick = time.now + game.tickDuration
+      this.onTick()
+    }
+
+    //make sure apple didnt spawn in body 🍏
     if (!apple.shouldSpawn && apple.shouldCheckSpawn) apple.shouldCheckSpawn = false
-    //spawn apple
-    if (apple.shouldSpawn) {
 
+    //spawn apple 
+    if (apple.shouldSpawn) {
       apple.shouldSpawn = false
       apple.shouldCheckSpawn = true
       this.newApple.x = Math.randomInt(0, 9)
       this.newApple.y = Math.randomInt(0, 9)
       if (this.newApple.x === apple.x && this.newApple.y === apple.y) {
+        //move the apple ifvit spawned inside the head
         apple.x = (this.newApple.x + Math.randomInt(2, 4)) % 10
         apple.y = (this.newApple.y + Math.randomInt(2, 4)) % 10
       } else {
@@ -184,13 +184,13 @@ export class Head extends Archetype {
       }
     }
 
-
     if (!game.lose) {
       //lerp animatipn for head and body
       game.nextTickAnimationProgress = (time.now - this.nextTick + game.tickDuration) / game.tickDuration
 
       //draw head normmal
       if (this.hasWrapped) {
+        //draw head appearing from other side
         this.HeadAppearAnimation(game.dir)
         skin.sprites.head.draw(this.layoutAppear, 50, 1)
         skin.sprites.shadow.draw(this.layoutAppear.translate(0, -0.02), 39, 1)
@@ -212,32 +212,29 @@ export class Head extends Archetype {
         skin.sprites.shadow.draw(layout.line.translate(tg(Math.lerp(this.oldPos.x, pos.x, game.nextTickAnimationProgress)), tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) - 0.07), 39, 1)
       }
 
-
       if (this.borderAlert && (Math.floor(time.now * 5) % 2 === 0)) skin.sprites.borderDanger.draw(layout.gridBorder, 4, 0.5)
 
-
-
     } else { //when game over
-      const shake= Math.pow(Math.max(game.deathTime+1-time.now,0)*0.1,2)
-       skin.sprites.grid.draw(layout.grid.translate(Math.randomFloat(-shake,shake),Math.randomFloat(-shake,shake)), 2, 1)
+    //shake camera (grid)
+      const shake = Math.pow(Math.max(game.deathTime + 1 - time.now, 0) * 0.1, 2)
+      skin.sprites.grid.draw(layout.grid.translate(Math.randomFloat(-shake, shake), Math.randomFloat(-shake, shake)), 2, 1)
+   
       //draw head dead 💀
-      skin.sprites.headDead.draw(
-        layout.sqaure.translate(tg(this.oldPos.x), tg(this.oldPos.y) + 0.02),
-        50, 1)
-      skin.sprites.shadow.draw(
-        layout.line.translate(tg(this.oldPos.x), tg(this.oldPos.y) - 0.07),
-        39, 1)
-     if (time.now>=game.deathTime+game.size*0.3-1) game.loseScore=true
+      skin.sprites.headDead.draw(layout.sqaure
+        .translate(tg(this.oldPos.x), tg(this.oldPos.y) + 0.02), 50, 1)
+      skin.sprites.shadow.draw(layout.line
+        .translate(tg(this.oldPos.x), tg(this.oldPos.y) - 0.07), 39, 1)
+
+      if (time.now >= game.deathTime + game.size * 0.3 - 1) game.loseScore = true
     }
 
     //draw apple 🍎
     if (!apple.shouldCheckSpawn && !apple.shouldSpawn) {
       skin.sprites.apple.draw(
-        floatingEffect(layout.sqaure).translate(tg(apple.x), tg(apple.y) + 0.02),
-        50,
-        1
-      );
+        floatingEffect(layout.sqaure)
+          .translate(tg(apple.x), tg(apple.y) + 0.02), 50, 1)
     }
+
     //draw gride
     skin.sprites.grid.draw(layout.grid, 1, 1)
     skin.sprites.border.draw(layout.gridBorder, 3, 1)
