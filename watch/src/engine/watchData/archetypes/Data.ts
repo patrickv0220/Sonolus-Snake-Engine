@@ -46,7 +46,7 @@ export class Data extends Archetype {
     }
     if (this.import.tick12 != 0 && this.import.tick12 <= t) {
       this.testDir = this.import.dir12;
-      this.testTick = this.import.tick11
+      this.testTick = this.import.tick12
       return;
     }
     if (this.import.tick11 != 0 && this.import.tick11 <= t) {
@@ -99,7 +99,8 @@ export class Data extends Archetype {
       this.testTick = this.import.tick2
       return;
     }
-    if (this.import.tick1 != 0 && this.import.tick1-1 <= t) {
+    if (this.import.tick1 != 0 && (this.import.tick1 == 1) ? 1 : this.import.tick1 == t) {
+      debug.log(this.import.tick1)
       this.testDir = this.import.dir1;
       this.testTick = this.import.tick1
       return;
@@ -108,6 +109,7 @@ export class Data extends Archetype {
 
   updateSequential() {
     effect.clips.test.play(0.02)
+    debug.log(666666)
     this.getDir()
     if (this.testDir != 0) {
       game.nextDir = this.testDir
@@ -115,7 +117,7 @@ export class Data extends Archetype {
     }
   }
   spawnTime() {
-    return (this.import.tick1 == 0) ? -999 : (this.import.tick1) * 0.4 -0.05
+    return (this.import.tick1 == 0) ? -999 : (this.import.tick1) * 0.4 - 0.05
   }
 
   despawnTime() {

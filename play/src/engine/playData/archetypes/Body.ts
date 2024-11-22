@@ -50,9 +50,9 @@ export class Body extends SpawnableArchetype({}) {
   updateParallel() {
     //draw the body part
     if (game.lose) {
-      const p = time.now - game.deathTime - ((game.size - this.tickLeft) * 0.3)
-      if (p >= 0 && p <= 0.3) {
-        const y = Math.max(0, 0.02 * Math.sin(p / 0.2 * Math.PI)) + 0.02
+      const p = time.now - game.deathTime - ((game.size - this.tickLeft) * 0.15)
+      if (p >= 0 && p <= 0.15) {
+        const y = Math.max(0, 0.02 * Math.sin(p / 0.1 * Math.PI)) + 0.02
         layout.sqaure.translate(tg(this.x), tg(this.y) + y).copyTo(this.layout)
       }
     } else {

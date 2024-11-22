@@ -142,6 +142,7 @@ export class Head extends Archetype {
         pos.x = ((pos.x % 10) + 10) % 10
         pos.y = ((pos.y % 10) + 10) % 10
         this.hasWrapped = true
+        effect.clips.wrap.play(0.03)
       } else death()
     }
 
@@ -225,7 +226,7 @@ export class Head extends Archetype {
       skin.sprites.shadow.draw(layout.line
         .translate(tg(this.oldPos.x), tg(this.oldPos.y) - 0.07), 39, 1)
 
-      if (time.now >= game.deathTime + game.size * 0.3 - 1) game.loseScore = true
+      if (time.now >= game.deathTime + game.size * 0.15 - 1) game.loseScore = true
     }
 
     //draw apple 🍎

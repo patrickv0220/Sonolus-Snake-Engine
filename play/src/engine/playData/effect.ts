@@ -5,6 +5,7 @@ export const effect = defineEffect({
     test: EffectClipName.Perfect,
     eat: EffectClipName.PerfectAlternative,
     die: EffectClipName.Hold,
-    swipe: EffectClipName.Stage
+    swipe: EffectClipName.Stage,
+    wrap: EffectClipName.Good
   },
 })

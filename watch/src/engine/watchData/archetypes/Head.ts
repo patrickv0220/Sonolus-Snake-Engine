@@ -62,8 +62,6 @@ export class Head extends Archetype {
     if (this.nextTick < time.now && !game.lose) {
       this.nextTick = time.now + 0.4
       this.tick++
-      debug.log(this.tick)
-      debug.log(game.nextTick)
       game.isTick = true
      // if (this.tick-1 >= game.nextTick) {
      // }
