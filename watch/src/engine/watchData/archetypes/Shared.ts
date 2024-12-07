@@ -30,8 +30,18 @@ export const layout = {
   gridBorder: Rect.one.mul(0.88),
   dpadUp: new Rect({ l: -0.1, r: 0.1, b: 0.05, t: 0.3 }),
   dpadDown: new Rect({ l: -0.1, r: 0.1, b: -0.05, t: -0.3 }),
-  dpadLeft: new Rect({ l: -0.05, r: -0.3, b: -0.1, t: 0.1 }),
-  dpadRight: new Rect({ l: 0.05, r: 0.3, b: -0.1, t: 0.1 }),
+  dpadLeft: new Quad({
+    x1: -0.05, y1: -0.1,
+    x2: -0.3, y2: -0.1,
+    x3: -0.3, y3: 0.1,
+    x4: -0.05, y4: 0.1,
+  }),
+  dpadRight: new Quad({
+    x1: 0.05, y1: -0.1,
+    x2: 0.3, y2: -0.1,
+    x3: 0.3, y3: 0.1,
+    x4: 0.05, y4: 0.1,
+  })
 }
 export const scaleToGrid = (x: number): number => x * 0.16 - 0.72
 

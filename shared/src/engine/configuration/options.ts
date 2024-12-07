@@ -7,6 +7,14 @@ export const optionsDefinition = {
     def: 0,
     values: ["Swipe", "Dpad"]
   },
+  dpadSize: {
+    name: "Dpad Size",
+    type: "slider",
+    def: 5,
+    max: 10,
+    min: 1,
+    step: 1
+  },
   noWall: {
     name: "Disable Walls",
     type: "toggle",

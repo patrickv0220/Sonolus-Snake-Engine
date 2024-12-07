@@ -15,8 +15,8 @@ export class Head extends Archetype {
   despawnTime() { return 999999 }
   dpadDown = this.entityMemory(Rect)
   dpadUp = this.entityMemory(Rect)
-  dpadRight = this.entityMemory(Rect)
-  dpadLeft = this.entityMemory(Rect)
+  dpadRight = this.entityMemory(Quad)
+  dpadLeft = this.entityMemory(Quad)
 
   borderAlert = this.entityMemory(Boolean)
   blink = this.entityMemory(Number)
@@ -32,39 +32,43 @@ export class Head extends Archetype {
     archetypes.Body.spawn({})
   }
 
-
   drawDpad() {
-    skin.sprites.buttonH.draw(this.dpadRight, 100, (this.dir === 4) ? 0.4 : 0.8)
-    skin.sprites.buttonH.draw(this.dpadLeft, 100, (this.dir === 2) ? 0.4 : 0.8)
-    skin.sprites.buttonV.draw(this.dpadDown, 100, (this.dir === 3) ? 0.4 : 0.8)
-    skin.sprites.buttonV.draw(this.dpadUp, 100, (this.dir === 1) ? 0.4 : 0.8)
+    skin.sprites.button.draw(this.dpadRight, 100, (this.dir === 4) ? 0.4 : 0.8)
+    skin.sprites.button.draw(this.dpadLeft, 100, (this.dir === 2) ? 0.4 : 0.8)
+    skin.sprites.button.draw(this.dpadDown, 100, (this.dir === 3) ? 0.4 : 0.8)
+    skin.sprites.button.draw(this.dpadUp, 100, (this.dir === 1) ? 0.4 : 0.8)
   }
   dpadInitialize() {
-    layout.dpadUp
-      .translate(screen.l + 0.45, screen.b + 0.45)
+    const s = (options.dpadSize+5)*0.1
+    const o= (options.dpadSize+15)*0.05
+   layout.dpadUp
+      .scale(s, s)
+      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
       .copyTo(this.dpadUp)
     layout.dpadDown
-      .translate(screen.l + 0.45, screen.b + 0.45)
+      .scale(s, s)
+      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
       .copyTo(this.dpadDown)
     layout.dpadLeft
-      .translate(screen.l + 0.45, screen.b + 0.45)
+      .scale(s, s)
+      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
       .copyTo(this.dpadLeft)
     layout.dpadRight
-      .translate(screen.l + 0.45, screen.b + 0.45)
+      .scale(s, s)
+      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
       .copyTo(this.dpadRight)
   }
-
   updateSequential() {
 
     game.isTick = false
-        this.dir = game.nextDir
-        game.dir = this.dir
+    this.dir = game.nextDir
+    game.dir = this.dir
     if (this.nextTick < time.now && !game.lose) {
       this.nextTick = time.now + 0.4
       this.tick++
       game.isTick = true
-     // if (this.tick-1 >= game.nextTick) {
-     // }
+      // if (this.tick-1 >= game.nextTick) {
+      // }
       if (game.dir == 5) game.lose = true
       this.oldPos.x = pos.x
       this.oldPos.y = pos.y
