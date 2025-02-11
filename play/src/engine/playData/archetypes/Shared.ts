@@ -1,3 +1,4 @@
+import { options } from "../../configuration/options.js"
 import { effect } from "../effect.js"
 
 //game variables
@@ -53,7 +54,7 @@ export const scaleToGrid = (x: number): number => x * 0.16 - 0.72
 
 export const death = () => {
   game.lose = true
-  effect.clips.die.play(0.02)
+  if (options.bgm) effect.clips.bgm_end.play(0.02); else effect.clips.die.play(0.02)
   game.dataIndex++
   game.shouldSaveData = true
   game.deathTime = time.now

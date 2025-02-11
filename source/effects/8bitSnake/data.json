@@ -35,6 +35,18 @@
         {
             "name": "#STAGE",
             "filename": "stage.mp3"
+        },
+        {
+            "name": "#BGM",
+            "filename": "bgm.mp3"
+        },
+        {
+            "name": "#BGM_END",
+            "filename": "bgm_end.mp3"
+        },
+        {
+            "name": "#APPLE",
+            "filename": "apple.mp3"
         }
     ]
 }

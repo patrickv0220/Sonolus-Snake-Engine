@@ -2,10 +2,11 @@ import { EffectClipName } from "@sonolus/core";
 
 export const effect = defineEffect({
     clips: {
-    test: EffectClipName.Perfect,
-    eat: EffectClipName.PerfectAlternative,
+    eat: "#APPLE",
     die: EffectClipName.Hold,
     swipe: EffectClipName.Stage,
-    wrap: EffectClipName.Good
+    wrap: EffectClipName.Good,
+    bgm: "#BGM",
+    bgm_end: "#BGM_END"
   },
 })

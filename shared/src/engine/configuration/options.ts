@@ -1,6 +1,11 @@
 import { EngineConfigurationOption } from '@sonolus/core'
 
 export const optionsDefinition = {
+  bgm: {
+    name: "Background Music",
+    type: "toggle",
+    def: 1
+  },
   dpad: {
     name: "Movement Method",
     type: "select",

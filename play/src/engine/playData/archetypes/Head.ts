@@ -24,6 +24,8 @@ export class Head extends Archetype {
   dpadRight = this.entityMemory(Quad)
   dpadLeft = this.entityMemory(Quad)
 
+  bgMuisc = this.entityMemory(LoopedEffectClipInstanceId)
+
   initialize() {
     if (options.dpad) this.dpadInitialize()
 
@@ -33,6 +35,8 @@ export class Head extends Archetype {
     this.dir = 4
 
     archetypes.Body.spawn({})
+
+    if (options.bgm) this.bgMuisc = effect.clips.bgm.loop()
   }
 
   touchSwipe(touch: Touch) {
@@ -54,11 +58,11 @@ export class Head extends Archetype {
   }
 
   touchDpad(touch: Touch) {
-    const s= (options.dpadSize+15)*0.05
+    const s = (options.dpadSize + 15) * 0.05
     //check if touching the dpad
-    if (touch.x < screen.l + 0.85*s && touch.y < screen.b + 0.85*s) {
-      const deltaX = touch.x - (screen.l + 0.425*s)
-      const deltaY = touch.y - (screen.b + 0.425*s)
+    if (touch.x < screen.l + 0.85 * s && touch.y < screen.b + 0.85 * s) {
+      const deltaX = touch.x - (screen.l + 0.425 * s)
+      const deltaY = touch.y - (screen.b + 0.425 * s)
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
         // Horizontal direction
         if (deltaX > 0) {
@@ -91,23 +95,23 @@ export class Head extends Archetype {
   }
 
   dpadInitialize() {
-    const s = (options.dpadSize+5)*0.1
-    const o= (options.dpadSize+15)*0.05
-   layout.dpadUp
+    const s = (options.dpadSize + 5) * 0.1
+    const o = (options.dpadSize + 15) * 0.05
+    layout.dpadUp
       .scale(s, s)
-      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
+      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
       .copyTo(this.dpadUp)
     layout.dpadDown
       .scale(s, s)
-      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
+      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
       .copyTo(this.dpadDown)
     layout.dpadLeft
       .scale(s, s)
-      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
+      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
       .copyTo(this.dpadLeft)
     layout.dpadRight
       .scale(s, s)
-      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
+      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
       .copyTo(this.dpadRight)
   }
 
@@ -221,8 +225,9 @@ export class Head extends Archetype {
       }
 
       if (this.borderAlert && (Math.floor(time.now * 5) % 2 === 0)) skin.sprites.borderDanger.draw(layout.gridBorder, 4, 0.5)
-
-    } else { //when game over
+      
+      //when game over
+    } else {
       //shake camera (grid)
       const shake = Math.pow(Math.max(game.deathTime + 1 - time.now, 0) * 0.1, 2)
       skin.sprites.grid.draw(layout.grid.translate(Math.randomFloat(-shake, shake), Math.randomFloat(-shake, shake)), 2, 1)
@@ -232,7 +237,8 @@ export class Head extends Archetype {
         .translate(tg(this.oldPos.x), tg(this.oldPos.y) + 0.02), 50, 1)
       skin.sprites.shadow.draw(layout.line
         .translate(tg(this.oldPos.x), tg(this.oldPos.y) - 0.07), 39, 1)
-
+      
+      effect.clips.stopLoop(this.bgMuisc)
       if (time.now >= game.deathTime + game.size * 0.15 - 1) game.loseScore = true
     }
 
