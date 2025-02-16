@@ -266,7 +266,7 @@ export class Head extends Archetype {
   }
 
   drawScore() {
-    const score = Math.min(999, (game.size - 3)*111)
+    const score = Math.min(999, game.size - 3)
 
     const alpha = 1 - 0.2 * Math.ease("In", "Expo", Math.min(0.5, this.scoreUpdateTime - time.now) * 2)
     if (this.scoreUpdateTime >= time.now) {
