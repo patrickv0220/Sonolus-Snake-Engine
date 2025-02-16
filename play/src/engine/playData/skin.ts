@@ -22,7 +22,20 @@ export const skin = defineSkin({
     plusOne: SkinSpriteName.NoteConnectionNeutral,
     plusTwo: SkinSpriteName.NoteConnectionYellow,
     plusFour: SkinSpriteName.NoteConnectionGreen,
-    //dpad
+    //ui
     button: SkinSpriteName.NoteConnectionBlueSeamless,
+    score: "Score",
+    skull: "Skull",
+    //numbers
+    numberZero: "NumberZero",
+    numberOne: "NumberOne",
+    numberTwo: "NumberTwo",
+    numberThree: "NumberThree",
+    numberFour: "NumberFour",
+    numberFive: "NumberFive",
+    numberSix: "NumberSix",
+    numberSeven: "NumberSeven",
+    numberHeight: "NumberHeight",
+    numberNine: "NumberNine",
   },
 }) 

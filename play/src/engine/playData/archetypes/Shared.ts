@@ -47,7 +47,9 @@ export const layout = {
     x2: 0.3, y2: -0.1,
     x3: 0.3, y3: 0.1,
     x4: 0.05, y4: 0.1,
-  })
+  }),
+  scoreDigit: new Rect({ l: -0.08, r: 0.08, b: -0.16, t: 0.16 }),
+  score: new Rect({ l: -0.3, r: 0.3, b: -0.096, t: 0.096 }),
 }
 
 export const scaleToGrid = (x: number): number => x * 0.16 - 0.72

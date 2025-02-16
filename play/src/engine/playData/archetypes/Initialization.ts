@@ -18,16 +18,6 @@ export class Initialization extends Archetype {
       horizontalAlign: HorizontalAlign.Center,
       background: true,
     });
-    ui.combo.value.set({
-      anchor: { x: screen.r * 0.75, y: -0.1 },
-      pivot: { x: 0, y: 0 },
-      size: new Vec(0, 0.35).mul(ui.configuration.combo.scale),
-      rotation: 0,
-      alpha: ui.configuration.combo.alpha,
-      horizontalAlign: HorizontalAlign.Center,
-      background: true,
-    })
-
     game.size = 3
     apple.shouldSpawn = true
     pos.x = 1

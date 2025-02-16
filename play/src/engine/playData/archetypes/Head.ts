@@ -16,6 +16,7 @@ export class Head extends Archetype {
   blink = this.entityMemory(Number)
   oldPos = this.entityMemory({ x: Number, y: Number })
   newApple = this.entityMemory({ x: Number, y: Number })
+  scoreUpdateTime = this.entityMemory(Number)
 
   layoutAppear = this.entityMemory(Rect) //used for the tp animatipn with the no walls option
 
@@ -23,6 +24,11 @@ export class Head extends Archetype {
   dpadUp = this.entityMemory(Rect)
   dpadRight = this.entityMemory(Quad)
   dpadLeft = this.entityMemory(Quad)
+
+  score = this.entityMemory(Rect)
+  score1 = this.entityMemory(Rect)
+  score2 = this.entityMemory(Rect)
+  score3 = this.entityMemory(Rect)
 
   bgMuisc = this.entityMemory(LoopedEffectClipInstanceId)
 
@@ -162,7 +168,8 @@ export class Head extends Archetype {
 
     //eat apple 🍏
     if (apple.x == pos.x && apple.y == pos.y) {
-      game.size++;
+      game.size++
+      this.scoreUpdateTime = time.now + 0.5
       effect.clips.eat.play(0.02)
       archetypes.ScoreEffect.spawn({})
       apple.shouldSpawn = true
@@ -225,7 +232,7 @@ export class Head extends Archetype {
       }
 
       if (this.borderAlert && (Math.floor(time.now * 5) % 2 === 0)) skin.sprites.borderDanger.draw(layout.gridBorder, 4, 0.5)
-      
+
       //when game over
     } else {
       //shake camera (grid)
@@ -237,7 +244,7 @@ export class Head extends Archetype {
         .translate(tg(this.oldPos.x), tg(this.oldPos.y) + 0.02), 50, 1)
       skin.sprites.shadow.draw(layout.line
         .translate(tg(this.oldPos.x), tg(this.oldPos.y) - 0.07), 39, 1)
-      
+
       effect.clips.stopLoop(this.bgMuisc)
       if (time.now >= game.deathTime + game.size * 0.15 - 1) game.loseScore = true
     }
@@ -252,8 +259,46 @@ export class Head extends Archetype {
     //draw gride
     skin.sprites.grid.draw(layout.grid, 1, 1)
     skin.sprites.border.draw(layout.gridBorder, 3, 1)
-
+  
+    //draw UI
     if (options.dpad) this.drawDpad()
+    this.drawScore()
+  }
+
+  drawScore() {
+    const score = Math.min(999, (game.size - 3)*111)
+
+    const alpha = 1 - 0.2 * Math.ease("In", "Expo", Math.min(0.5, this.scoreUpdateTime - time.now) * 2)
+    if (this.scoreUpdateTime >= time.now) {
+      const scale = 0.85 + 0.3 * Math.ease("In", "Expo", Math.min(0.5, this.scoreUpdateTime - time.now) * 2)
+      layout.scoreDigit
+        .mul(scale)
+        .translate(screen.r * 0.75 + 0.15, 0.04)
+        .copyTo(this.score1)
+      layout.scoreDigit
+        .mul(scale)
+        .translate(screen.r * 0.75, 0.04)
+        .copyTo(this.score2)
+      layout.scoreDigit
+        .mul(scale)
+        .translate(screen.r * 0.75 - 0.15, 0.04)
+        .copyTo(this.score3)
+
+      layout.score
+        .mul(scale)
+        .translate(screen.r * 0.75, -0.14)
+        .copyTo(this.score)
+    }
+
+    const digit1 = Math.floor(score % 10) + skin.sprites.numberZero.id as SkinSpriteId
+    const digit2 = Math.floor(score / 10 % 10) + skin.sprites.numberZero.id as SkinSpriteId
+    const digit3 = Math.floor(score / 100) + skin.sprites.numberZero.id as SkinSpriteId
+
+    skin.sprites.draw(digit1, this.score1, 100, alpha)
+    skin.sprites.draw(digit2, this.score2, 101, alpha)
+    skin.sprites.draw(digit3, this.score3, 102, alpha)
+
+    skin.sprites.score.draw(this.score, 110, alpha)
   }
 
   HeadAppearAnimation(dir: Number) {
