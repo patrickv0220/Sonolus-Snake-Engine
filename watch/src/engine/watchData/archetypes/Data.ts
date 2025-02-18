@@ -1,4 +1,3 @@
-import { effect } from "../effect.js";
 import { game } from "./Shared.js";
 
 export class Data extends Archetype {
@@ -14,6 +13,7 @@ export class Data extends Archetype {
     ,
   ) as Record<`tick${number}` | `dir${number}`, { name: string; type: NumberConstructor }>;
 
+  updateSequentialOrder = 1
 
   import = this.defineImport(this.importDataTickDir)
   testDir = this.entityMemory(Number)
@@ -21,7 +21,6 @@ export class Data extends Archetype {
 
   getDir() {
     const t = Math.floor((time.now) / 0.4)
-    if (debug.enabled) effect.clips.test.play(0.02)
 
     this.testDir = 0
     if (this.import.tick16 != 0 && this.import.tick16 <= t) {
@@ -99,8 +98,7 @@ export class Data extends Archetype {
       this.testTick = this.import.tick2
       return;
     }
-    if (this.import.tick1 != 0 && (this.import.tick1 == 1) ? 1 : this.import.tick1 == t) {
-      debug.log(this.import.tick1)
+    if (this.import.tick1 != 0 && (this.import.tick1 === 1 || this.import.tick1 === t)) {
       this.testDir = this.import.dir1;
       this.testTick = this.import.tick1
       return;
@@ -108,8 +106,6 @@ export class Data extends Archetype {
   }
 
   updateSequential() {
-    effect.clips.test.play(0.02)
-    debug.log(666666)
     this.getDir()
     if (this.testDir != 0) {
       game.nextDir = this.testDir

@@ -1,4 +1,3 @@
-import { effect } from "../effect.js";
 import { game } from "./Shared.js";
 
 export class Data extends Archetype {

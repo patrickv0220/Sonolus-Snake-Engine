@@ -4,7 +4,7 @@ import { apple, game, layout, pos, scaleToGrid as tg } from "./Shared.js";
 
 export class Body extends SpawnableArchetype({}) {
 
-  updateSequentialOrder = 1
+  updateSequentialOrder = 1000
 
   layout = this.entityMemory(Rect)
   layoutShadow = this.entityMemory(Rect)

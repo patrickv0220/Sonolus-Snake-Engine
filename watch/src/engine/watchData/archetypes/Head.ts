@@ -5,6 +5,8 @@ import { pos, game, scaleToGrid as tg, layout } from "./Shared.js"
 
 export class Head extends Archetype {
 
+  updateSequentialOrder = 999
+
   tick = this.entityMemory(Number)
   dataIndex = this.entityMemory(Number)
   nextTick = this.entityMemory(Number)
@@ -39,23 +41,23 @@ export class Head extends Archetype {
     skin.sprites.button.draw(this.dpadUp, 100, (this.dir === 1) ? 0.4 : 0.8)
   }
   dpadInitialize() {
-    const s = (options.dpadSize+5)*0.1
-    const o= (options.dpadSize+15)*0.05
-   layout.dpadUp
+    const s = (options.dpadSize + 5) * 0.1
+    const o = (options.dpadSize + 15) * 0.05
+    layout.dpadUp
       .scale(s, s)
-      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
+      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
       .copyTo(this.dpadUp)
     layout.dpadDown
       .scale(s, s)
-      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
+      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
       .copyTo(this.dpadDown)
     layout.dpadLeft
       .scale(s, s)
-      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
+      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
       .copyTo(this.dpadLeft)
     layout.dpadRight
       .scale(s, s)
-      .translate(screen.l + 0.45*o, screen.b + 0.45*o)
+      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
       .copyTo(this.dpadRight)
   }
   updateSequential() {
@@ -65,6 +67,7 @@ export class Head extends Archetype {
     game.dir = this.dir
     if (this.nextTick < time.now && !game.lose) {
       this.nextTick = time.now + 0.4
+      game.tick= this.tick
       this.tick++
       game.isTick = true
       // if (this.tick-1 >= game.nextTick) {
