@@ -8,3 +8,4 @@ pack
 source/engines/SnakeEngine/playData
 source/engines/SnakeEngine/watchData
 source/engines/SnakeEngine/configuration
+source/levels/snake/data

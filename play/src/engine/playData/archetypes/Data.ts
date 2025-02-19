@@ -33,7 +33,7 @@ export class Data extends Archetype {
   updateSequential() {
 
     if (game.isTick && (data.shouldSaveDirection || data.shouldSaveApple || data.shouldSaveDeath)
-      && data.Index >= (this.import.DataIndex * 16) && data.Index < this.import.DataIndex + 1 * 16) {
+      && data.Index >= (this.import.DataIndex * 16) && data.Index < (this.import.DataIndex + 1) * 16) {
 
       data.Index++
 
@@ -43,12 +43,15 @@ export class Data extends Archetype {
       if (data.shouldSaveDirection) {
         d = game.dir
         data.shouldSaveDirection = false
+        debug.log(4+100*data.Index+1000000*this.import.DataIndex)
       } else if (data.shouldSaveApple) {
         d = (5 * 100 + apple.x * 10 + apple.y)
         data.shouldSaveApple = false
+        debug.log(5+100*data.Index+1000000*this.import.DataIndex)
       } else if (data.shouldSaveDeath) {
         d = 6
         data.shouldSaveDeath = false
+        debug.log(6+100*data.Index+1000000*this.import.DataIndex)
       }
 
       switch (data.Index % 16) {
