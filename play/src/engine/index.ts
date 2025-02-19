@@ -1,4 +1,4 @@
-import { configuration } from './configuration/index.js'
+import { configuration } from './configuration.js'
 import { playData } from './playData/index.js'
 
 export const engine = {

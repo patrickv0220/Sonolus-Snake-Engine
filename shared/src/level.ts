@@ -1,13 +1,9 @@
 import { LevelData } from '@sonolus/core'
 
 
-export const data: LevelData = {
+const data: LevelData = {
   bgmOffset: 0,
   entities: [
-    {
-      archetype: 'Initialization',
-      data: [],
-    },
     {
       archetype: 'Head',
       data: [],
@@ -23,8 +19,12 @@ export const data: LevelData = {
       archetype: 'Data',
       data: [{
         name: "DataIndex",
-        value: index + 1
+        value: index
       }],
     })),
   ],
+}
+
+export const level = {
+    data,
 }

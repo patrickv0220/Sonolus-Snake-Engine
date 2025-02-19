@@ -1,8 +1,9 @@
+import { skin } from '../../../../shared/skin.js'
+import { particle } from '../../../../shared/particle.js'
+import { effect } from '../../../../shared/effect.js'
 import { archetypes } from './archetypes/index.js'
-import { buckets } from './buckets.js'
-import { effect } from './effect.js'
-import { particle } from './particle.js'
-import { skin } from './skin.js'
+
+const buckets = defineBuckets({})
 
 export const playData = {
     skin,

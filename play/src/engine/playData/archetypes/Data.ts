@@ -1,5 +1,11 @@
-import { game } from "./Shared.js";
+import { apple, data, game } from "./Shared.js";
 
+/** the Data entity is used to save the game data for replay mode
+ * exported data is 16 pairs of tickN et dirN
+ * where dir is the data change like direction (1 up ;3 down; 2 left; 4 right)
+ * or an apple eaten `5{new apple.x}{new apple.y}` and `6` is dead
+ * and Tick is the game tick at which the event happened
+*/
 export class Data extends Archetype {
 
   exportDataTickDir = Object.fromEntries(
@@ -18,6 +24,7 @@ export class Data extends Archetype {
   export = this.defineExport(this.exportDataTickDir)
 
   spawnOrderOrder = 3
+  updateSequentialOrder = 999
 
   shouldSpawn() {
     return true
@@ -25,12 +32,26 @@ export class Data extends Archetype {
 
   updateSequential() {
 
-    if (game.dataIndex >= (this.import.DataIndex-1) * 16&&game.dataIndex <= this.import.DataIndex * 16 && game.shouldSaveData) {
-      game.shouldSaveData = false
+    if (game.isTick && (data.shouldSaveDirection || data.shouldSaveApple || data.shouldSaveDeath)
+      && data.Index >= (this.import.DataIndex * 16) && data.Index < this.import.DataIndex + 1 * 16) {
+
+      data.Index++
+
       const t = game.tick
-      const d = (game.lose) ? 5 : game.dir
-        
-      switch (game.dataIndex % 16) {
+
+      let d = 0
+      if (data.shouldSaveDirection) {
+        d = game.dir
+        data.shouldSaveDirection = false
+      } else if (data.shouldSaveApple) {
+        d = (5 * 100 + apple.x * 10 + apple.y)
+        data.shouldSaveApple = false
+      } else if (data.shouldSaveDeath) {
+        d = 6
+        data.shouldSaveDeath = false
+      }
+
+      switch (data.Index % 16) {
         case 1:
           this.export("tick1", t)
           this.export("dir1", d)

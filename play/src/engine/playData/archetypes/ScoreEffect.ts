@@ -1,6 +1,7 @@
-import { skin } from "../skin.js";
+import { skin } from "../../../../../shared/skin.js";
 import { layout, pos, scaleToGrid } from "./Shared.js";
 
+/** Flying score effect spadned when eating an apple*/
 export class ScoreEffect extends SpawnableArchetype({}) {
   spawnTime = this.entityMemory(Number)
   x = this.entityMemory(Number)

@@ -1,7 +1,9 @@
-import { options } from "../../configuration/options.js"
-import { effect } from "../effect.js"
+import { effect } from "../../../../../shared/effect.js"
+import { options } from "../../configuration.js"
 
 //game variables
+
+//pos is snake position
 export const pos = levelMemory({
   x: Number,
   y: Number
@@ -9,7 +11,6 @@ export const pos = levelMemory({
 
 export const game = levelMemory({
   isTick: Boolean,
-  shouldSaveData: Boolean,
   tick: Number,
   tickDuration: Number,
   dir: Number,
@@ -19,7 +20,14 @@ export const game = levelMemory({
   deathTime: Number,
   nextTickAnimationProgress: Number,//used for the lerp animation when drawiing movinng head and tail and for the death animation
   bodyColour: Boolean,//used to alternate the body colours
-  dataIndex: Number,
+})
+
+//used to export data to replay mode
+export const data = levelMemory({
+  shouldSaveDirection: Boolean,
+  shouldSaveApple: Boolean,
+  shouldSaveDeath: Boolean,
+  Index: Number,
 })
 
 export const apple = levelMemory({
@@ -29,6 +37,7 @@ export const apple = levelMemory({
   shouldCheckSpawn: Boolean,
 })
 
+//static layout used for drawing stuff
 export const layout = {
   sqaure: Rect.one.mul(0.08),
   line: new Rect({ l: -0.08, r: 0.08, b: -0.01, t: 0.01, }), //used for shadows and eyelid
@@ -52,16 +61,20 @@ export const layout = {
   score: new Rect({ l: -0.3, r: 0.3, b: -0.096, t: 0.096 }),
 }
 
+/** given a position on the grid (x int between 0 and 9)
+ * will return x's position on the screen to draw something*/
 export const scaleToGrid = (x: number): number => x * 0.16 - 0.72
 
+/** function to call when the snake dies,
+ * will be executed by both `Head` and `Body` entities*/
 export const death = () => {
   game.lose = true
   if (options.bgm) effect.clips.bgm_end.play(0.02); else effect.clips.die.play(0.02)
-  game.dataIndex++
-  game.shouldSaveData = true
+  data.shouldSaveDeath = true
   game.deathTime = time.now
 }
 
+/** used for the floating apple animation*/
 export const floatingEffect = (
   { l, r, b, t }: RectLike,
 ): Quad => {

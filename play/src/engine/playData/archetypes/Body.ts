@@ -1,6 +1,11 @@
-import { skin } from "../skin.js";
 import { apple, death, game, layout, pos, scaleToGrid as tg } from "./Shared.js";
+import { skin } from '../../../../../shared/skin.js'
 
+/** Each body entity does 4 things:
+ * - draw itslef to give the snake a nice body
+ * - check if the snake's head hit that body part
+ * - make sure the apple doesn't randomly spawn in the body
+ * - dispawn itslef to ensure a consistent snake length*/
 export class Body extends SpawnableArchetype({}) {
 
   updateSequentialOrder = 1
@@ -21,32 +26,41 @@ export class Body extends SpawnableArchetype({}) {
       .copyTo(this.layoutShadow)
     this.x = pos.x
     this.y = pos.y
+
+    //the body direction is only needed for the despawn animation
     this.dir = -1 //-1 so that its only drawn the next tick
+
     this.tickLeft = game.size
     this.colour = game.bodyColour
   }
 
-
   updateSequential() {
+
+    //we only need to update this body part each tick
     if (game.isTick) {
       if (!game.lose) {
+
         if (this.dir === -1) this.dir = game.dir
         this.tickLeft--
+
         if (this.tickLeft === 0) { this.despawn = true } else {
-          //detect if the head hit the body.
+          //detect if the head hit the body.🤕
           if (this.x == pos.x && this.y == pos.y) death()
         }
-      } else if (this.tickLeft === 1) {
-        this.despawn = true
+
       }
+      //dispawn the body part
+      else if (this.tickLeft === 1) this.despawn = true
     }
 
-    //respawn the apple if it spawned inside the body
+    //check and respawn the apple if it spawned inside the body 🍎
     if (apple.shouldCheckSpawn && this.x == apple.x && this.y == apple.y) {
       apple.shouldSpawn = true
       apple.shouldCheckSpawn = false
     }
   }
+
+
   updateParallel() {
     //draw the body part
     if (game.lose) {
@@ -64,7 +78,8 @@ export class Body extends SpawnableArchetype({}) {
     }
   }
 
-
+  /** The animation for the last body part slowly shrinking
+  * updates this.layout */
   TailDespawnAnimation(dir: Number) {
     const p = game.nextTickAnimationProgress;
     switch (dir) {
@@ -79,7 +94,6 @@ export class Body extends SpawnableArchetype({}) {
             .translate(tg(this.x), tg(this.y) + 0.02)
             .copyTo(this.layout)
         }
-
         break;
       case 1:
         {
@@ -92,7 +106,6 @@ export class Body extends SpawnableArchetype({}) {
             .translate(tg(this.x), tg(this.y) + 0.02)
             .copyTo(this.layout)
         }
-
         break;
       case 2:
         {
@@ -105,7 +118,6 @@ export class Body extends SpawnableArchetype({}) {
             .translate(tg(this.x), tg(this.y) + 0.02)
             .copyTo(this.layout)
         }
-
         break;
       case 3:
         {
