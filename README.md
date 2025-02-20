@@ -9,10 +9,10 @@
 If you really want to try out this buggy snake game, you can add the following server url in the Sonolus app: https://lbo44.github.io/Sonolus-Snake-Engine or you can directly click on [this link](https://open.sonolus.com/lbo44.github.io/Sonolus-Snake-Engine).
 
 ## 📋 Things I might try to do:
-- [ ] find good sfx 🎵
+- [x] find good enough sfx 🎵
 - [ ] replay mode (I have no clue how)
-    - [ ] properly load the movement data
-    - [ ] load the apples in the correct order
+    - [x] properly load the movement data
+    - [x] load the apples in the correct order
     - [ ] draw the whole snake body
     - [ ] add progress bar to allow jumping to any moment of the replay
 - [ ] improve visuals ✨

@@ -1,6 +1,6 @@
-import { effect } from "../effect.js";
-import { skin } from "../skin.js";
-import { apple, game, layout, pos, scaleToGrid as tg } from "./Shared.js";
+import { skin } from "../../../../../shared/skin.js";
+import { layout, scaleToGrid as tg } from "../../../../../shared/utilities.js";
+import { apple, game, pos } from "./Shared.js";
 
 export class Body extends SpawnableArchetype({}) {
 

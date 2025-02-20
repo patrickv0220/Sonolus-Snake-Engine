@@ -1,6 +1,7 @@
 import { options } from "../../configuration.js"
 import { skin } from '../../../../../shared/skin.js'
-import { pos, game, scaleToGrid as tg, apple, layout, floatingEffect, death, data } from "./Shared.js"
+import { pos, game, apple, death, data } from "./Shared.js"
+import {scaleToGrid as tg, layout, floatingEffect, HeadAppearAnimation} from "../../../../../shared/utilities.js"
 import { archetypes } from "./index.js";
 import { effect } from "../../../../../shared/effect.js";
 
@@ -15,7 +16,7 @@ export class Head extends Archetype {
   //entity memory
   dir = this.entityMemory(Number) //1 up ;3 down; 2 left; 4 right
   previousDir = this.entityMemory(Number)
-  nextTick = this.entityMemory(Number)
+  nextTickTime = this.entityMemory(Number)
   borderAlert = this.entityMemory(Boolean)
   hasWrapped = this.entityMemory(Boolean)
   blink = this.entityMemory(Number)
@@ -152,8 +153,8 @@ export class Head extends Archetype {
 
     //tick logic
     game.isTick = false
-    if (this.nextTick < time.now && !game.lose) {
-      this.nextTick = time.now + game.tickDuration
+    if (this.nextTickTime < time.now && !game.lose) {
+      this.nextTickTime = time.now + game.tickDuration
       this.onTick()
     }
 
@@ -273,11 +274,11 @@ export class Head extends Archetype {
     else {
 
       //progress value for the lerp animation for head and body
-      game.nextTickAnimationProgress = (time.now - this.nextTick + game.tickDuration) / game.tickDuration
+      game.nextTickAnimationProgress = (time.now - this.nextTickTime + game.tickDuration) / game.tickDuration
 
       //draw head appearing from other side if the snake passed through a wall
       if (this.hasWrapped) {
-        this.HeadAppearAnimation(game.dir)
+        HeadAppearAnimation(this.layoutAppear,pos,game.dir,game.nextTickAnimationProgress)
         skin.sprites.head.draw(this.layoutAppear, 50, 1)
         skin.sprites.shadow.draw(this.layoutAppear.translate(0, -0.02), 39, 1)
       }
@@ -309,7 +310,7 @@ export class Head extends Archetype {
     //draw apple 🍎
     if (!apple.shouldCheckSpawn && !apple.shouldSpawn) {
       skin.sprites.apple.draw(
-        floatingEffect(layout.sqaure)
+        floatingEffect(layout.sqaure,time.now)
           .translate(tg(apple.x), tg(apple.y) + 0.02), 50, 1)
     }
 
@@ -365,60 +366,5 @@ export class Head extends Archetype {
     skin.sprites.score.draw(this.score, 110, alpha)
   }
 
-  /** animation used in the "no walls" game mode only
-   * update the this.layoutAppear  layout variable*/
-  HeadAppearAnimation(dir: Number) {
-    const p = game.nextTickAnimationProgress;
-    switch (dir) {
-      case 2:
-        {
-          new Rect({
-            l: Math.lerp(0.08, - 0.08, p),
-            r: 0.08,
-            b: -0.08,
-            t: 0.08,
-          })
-            .translate(tg(pos.x), tg(pos.y) + 0.02)
-            .copyTo(this.layoutAppear)
-        }
-        break;
-      case 3:
-        {
-          new Rect({
-            l: -0.08,
-            r: 0.08,
-            b: Math.lerp(0.08, -0.08, p),
-            t: 0.08,
-          })
-            .translate(tg(pos.x), tg(pos.y) + 0.02)
-            .copyTo(this.layoutAppear)
-        }
-        break;
-      case 4:
-        {
-          new Rect({
-            l: -0.08,
-            r: Math.lerp(-0.08, 0.08, p),
-            b: -0.08,
-            t: 0.08,
-          })
-            .translate(tg(pos.x), tg(pos.y) + 0.02)
-            .copyTo(this.layoutAppear)
-        }
-        break;
-      case 1:
-        {
-          new Rect({
-            l: -0.08,
-            r: 0.08,
-            b: -0.08,
-            t: Math.lerp(-0.08, 0.08, p),
-          })
-            .translate(tg(pos.x), tg(pos.y) + 0.02)
-            .copyTo(this.layoutAppear)
-        }
-        break;
-    }
-  }
 }
 

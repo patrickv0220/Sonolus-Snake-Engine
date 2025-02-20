@@ -11,7 +11,7 @@ export class Score extends Archetype {
       return 4
   }
   shouldSpawn() {
-    return game.loseScore && (game.deathTime +5 < time.now )
+    return game.loseScore && (game.deathTime +2 < time.now )
   }
 
   updateParallel() {

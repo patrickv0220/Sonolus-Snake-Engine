@@ -1,5 +1,6 @@
 import { skin } from "../../../../../shared/skin.js";
-import { layout, pos, scaleToGrid } from "./Shared.js";
+import { pos } from "./Shared.js";
+import {scaleToGrid, layout} from "../../../../../shared/utilities.js"
 
 /** Flying score effect spadned when eating an apple*/
 export class ScoreEffect extends SpawnableArchetype({}) {

@@ -1,4 +1,5 @@
-import { apple, death, game, layout, pos, scaleToGrid as tg } from "./Shared.js";
+import { apple, death, game, pos} from "./Shared.js"
+import {scaleToGrid as tg, layout} from "../../../../../shared/utilities.js"
 import { skin } from '../../../../../shared/skin.js'
 
 /** Each body entity does 4 things:

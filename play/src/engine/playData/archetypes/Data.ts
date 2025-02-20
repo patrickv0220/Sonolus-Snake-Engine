@@ -37,21 +37,22 @@ export class Data extends Archetype {
 
       data.Index++
 
-      const t = game.tick
+      let t = game.tick
 
       let d = 0
-      if (data.shouldSaveDirection) {
-        d = game.dir
-        data.shouldSaveDirection = false
-        debug.log(4+100*data.Index+1000000*this.import.DataIndex)
-      } else if (data.shouldSaveApple) {
-        d = (5 * 100 + apple.x * 10 + apple.y)
-        data.shouldSaveApple = false
-        debug.log(5+100*data.Index+1000000*this.import.DataIndex)
-      } else if (data.shouldSaveDeath) {
+      if (data.shouldSaveDeath) {
         d = 6
         data.shouldSaveDeath = false
-        debug.log(6+100*data.Index+1000000*this.import.DataIndex)
+        debug.log(6 + 100 * data.Index + 1000000 * this.import.DataIndex)
+      } else if (data.shouldSaveDirection) {
+        d = game.dir
+        data.shouldSaveDirection = false
+        debug.log(4 + 100 * data.Index + 1000000 * this.import.DataIndex)
+      } else if (data.shouldSaveApple) {
+        d = (500 + apple.x * 10 + apple.y)
+        t = game.tick - 1 //because it takes 1 tick to verify the apple's spawn
+        data.shouldSaveApple = false
+        debug.log(5 + 100 * data.Index + 1000000 * this.import.DataIndex)
       }
 
       switch (data.Index % 16) {
