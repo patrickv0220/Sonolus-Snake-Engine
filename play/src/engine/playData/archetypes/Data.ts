@@ -31,28 +31,31 @@ export class Data extends Archetype {
   }
 
   updateSequential() {
-
-    if (game.isTick && (data.shouldSaveDirection || data.shouldSaveApple || data.shouldSaveDeath)
+    if ((game.tick > 0 || game.isTick) && (data.shouldSaveDirection || data.shouldSaveApple || data.shouldSaveDeath)
       && data.Index >= (this.import.DataIndex * 16) && data.Index < (this.import.DataIndex + 1) * 16) {
-
       data.Index++
 
-      let t = game.tick
+      //if only 1 slot of data is free in this entity but we need to save 2 events on same tick
+      //then we directly skip to the next data entity
+      if (data.Index % 16 == 0 && 2 <= (data.shouldSaveApple ? 1 : 0) + (data.shouldSaveDeath ? 1 : 0) + (data.shouldSaveDirection ? 1 : 0)) {
+        this.export("tick16", -999)
+        return
+      }
 
+
+      let t = (game.tick == 0) ? 1 : game.tick
       let d = 0
       if (data.shouldSaveDeath) {
         d = 6
         data.shouldSaveDeath = false
-        debug.log(6 + 100 * data.Index + 1000000 * this.import.DataIndex)
+      } else if (data.shouldSaveApple) {
+        d = (500 + apple.x * 10 + apple.y)
+        t = game.tick
+        data.shouldSaveApple = false
+        debug.log(5 + 100 * data.Index + 1000000 * this.import.DataIndex)
       } else if (data.shouldSaveDirection) {
         d = game.dir
         data.shouldSaveDirection = false
-        debug.log(4 + 100 * data.Index + 1000000 * this.import.DataIndex)
-      } else if (data.shouldSaveApple) {
-        d = (500 + apple.x * 10 + apple.y)
-        t = game.tick - 1 //because it takes 1 tick to verify the apple's spawn
-        data.shouldSaveApple = false
-        debug.log(5 + 100 * data.Index + 1000000 * this.import.DataIndex)
       }
 
       switch (data.Index % 16) {
@@ -122,6 +125,8 @@ export class Data extends Archetype {
           this.despawn = true
           break;
       }
+
+
     }
   }
 }

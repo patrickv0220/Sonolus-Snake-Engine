@@ -2,7 +2,7 @@ import { options } from "../../configuration.js"
 import { skin } from '../../../../../shared/skin.js'
 import { pos, game, apple } from "./Shared.js"
 import { scaleToGrid as tg, layout, floatingEffect } from "../../../../../shared/utilities.js"
-import { archetypes } from "./index.js";
+import { archetypes } from "./index.js"
 
 export class Head extends Archetype {
 
@@ -52,6 +52,7 @@ export class Head extends Archetype {
     pos.x = 1
     pos.y = 3
     game.tickDuration = 0.4
+    archetypes.Body.spawn({})
   }
 
 
@@ -105,7 +106,7 @@ export class Head extends Archetype {
     this.checkData(game.dataDir2)
     game.dataDir2 = 0
 
-    //move haed ➡️
+    //move head ➡️
     this.oldPos.x = pos.x
     this.oldPos.y = pos.y
     switch (game.dir) {
@@ -113,6 +114,15 @@ export class Head extends Archetype {
       case 2: pos.x--; break
       case 1: pos.y++; break
       case 3: pos.y--; break
+    }
+
+    //wrap 🧱
+    if (Math.max(pos.x, pos.y) > 9 || Math.min(pos.x, pos.y) < 0) {
+      if (options.noWall) {
+        //wrap to the other side
+        pos.x = ((pos.x % 10) + 10) % 10
+        pos.y = ((pos.y % 10) + 10) % 10
+      }
     }
   }
 
@@ -130,12 +140,15 @@ export class Head extends Archetype {
       if (Math.floor(dir * 0.01) == 5) {
         apple.x = Math.floor((dir % 100) * 0.1)
         apple.y = dir % 10
+        game.size++
+        if (game.size % 5 == 0) game.tickDuration = Math.max(0.1, game.tickDuration - 0.025)
+
       }
 
       //losing 
       if (dir == 6) {
         game.lose = true
-        game.dir=0
+        game.dir = 0
       }
     }
   }
@@ -172,7 +185,7 @@ export class Head extends Archetype {
     }
 
     //draw apple 🍎
-    skin.sprites.apple.draw(
+    if (time.now > 0) skin.sprites.apple.draw(
       floatingEffect(layout.sqaure, time.now)
         .translate(tg(apple.x), tg(apple.y) + 0.02), 50, 1)
 

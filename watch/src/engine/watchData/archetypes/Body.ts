@@ -1,112 +1,62 @@
 import { skin } from "../../../../../shared/skin.js";
-import { layout, scaleToGrid as tg } from "../../../../../shared/utilities.js";
-import { apple, game, pos } from "./Shared.js";
+import { layout, TailDespawnAnimation, scaleToGrid as tg } from "../../../../../shared/utilities.js";
+import { body, game, pos } from "./Shared.js";
 
+/** Unlike in play mode, in watch mode the body entity draws AKL the body parts
+ * as a single entity*/
 export class Body extends SpawnableArchetype({}) {
 
   updateSequentialOrder = 1000
 
-  layout = this.entityMemory(Rect)
-  layoutShadow = this.entityMemory(Rect)
-  x = this.entityMemory(Number)
-  y = this.entityMemory(Number)
-  dir = this.entityMemory(Number) //used for the despawn animation
-  colour = this.entityMemory(Boolean)
-  tickLeft = this.entityMemory(Number)
+  spawnTime() { return -999999 }
+  despawnTime() { return 999999 }
 
 
-  initialize() {
-    layout.sqaure.translate(tg(pos.x), tg(pos.y) + 0.02)
-      .copyTo(this.layout)
-    layout.line.translate(tg(pos.x), tg(pos.y) - 0.07)
-      .copyTo(this.layoutShadow)
-    this.x = pos.x
-    this.y = pos.y
-    this.dir = -1 //-1 so that its only drawn the next tick
-    this.tickLeft = game.size
-    this.colour = game.bodyColour
-  }
-
-  spawnTime(): number {
-      return time.now
-  }
-
-  despawnTime(): number {
-      return time.now+game.size*0.4
-  }
   updateSequential() {
     if (game.isTick) {
-     
-        if (this.dir === -1) this.dir = game.dir
-        this.tickLeft--
+      //add body
+      debug.log(game.tick % 100)
+      body.pos.set(game.tick % 100, (game.dir * 100 + pos.x * 10 + pos.y))
+      body.tickLeft.set(game.tick % 100, game.size + game.tick)
     }
-
   }
+
+
   updateParallel() {
-    //draw the body part
-      if (this.tickLeft === 1) this.TailDespawnAnimation()
-    
-    if (this.dir != -1) {
-      if (this.colour) { skin.sprites.bodyDark.draw(this.layout, 40, 1) } else { skin.sprites.bodyLight.draw(this.layout, 40, 1) }
-      skin.sprites.shadow.draw(this.layout.translate(0, -0.02), 39, 1)
+    //draw the body parts
+    for (let index = 0; index < 100; index++) {
+
+      //check if that part should be drawn
+      if (body.tickLeft.get(index) > game.tick) {
+
+        const x = Math.floor((body.pos.get(index) % 100) / 10)
+        const y = body.pos.get(index) % 10
+
+        const bodySkin = (index % 2 == 0) ? skin.sprites.bodyLight.id : skin.sprites.bodyDark.id
+
+        //draw the despawning one
+        if (body.tickLeft.get(index) == game.tick + 1) {
+          const dir = Math.floor(body.pos.get((index + 1) % 100) / 100)
+          let rect = new Rect
+          TailDespawnAnimation(rect, dir, { x: x, y: y }, game.nextTickAnimationProgress)
+
+          skin.sprites.shadow.draw(rect.translate(0, -0.02), 39, 1)
+          skin.sprites.draw(bodySkin, rect, 40, 1)
+        }
+
+        //draw "normal" body parts
+        else if (body.tickLeft.get(index) < game.tick + game.size) {
+
+          const bodyRect = layout.sqaure.translate(tg(x), tg(y) + 0.02)
+          const shadow = layout.line.translate(tg(x), tg(y) - 0.07)
+
+          skin.sprites.shadow.draw(shadow, 39, 1)
+          skin.sprites.draw(bodySkin, bodyRect, 40, 1)
+        }
+
+      }
     }
-  }
 
-
-  TailDespawnAnimation() {
-    switch (this.dir) {
-      case 4:
-        {
-          new Rect({
-            l: Math.lerp(-0.08, 0.08, game.nextTickAnimationProgress),
-            r: 0.08,
-            b: -0.08,
-            t: 0.08,
-          })
-            .translate(tg(this.x), tg(this.y) + 0.02)
-            .copyTo(this.layout)
-        }
-
-        break;
-      case 1:
-        {
-          new Rect({
-            l: -0.08,
-            r: 0.08,
-            b: Math.lerp(-0.08, 0.08, game.nextTickAnimationProgress),
-            t: 0.08,
-          })
-            .translate(tg(this.x), tg(this.y) + 0.02)
-            .copyTo(this.layout)
-        }
-
-        break;
-      case 2:
-        {
-          new Rect({
-            l: -0.08,
-            r: Math.lerp(0.08, -0.08, game.nextTickAnimationProgress),
-            b: -0.08,
-            t: 0.08,
-          })
-            .translate(tg(this.x), tg(this.y) + 0.02)
-            .copyTo(this.layout)
-        }
-
-        break;
-      case 3:
-        {
-          new Rect({
-            l: -0.08,
-            r: 0.08,
-            b: -0.08,
-            t: Math.lerp(0.08, -0.08, game.nextTickAnimationProgress),
-          })
-            .translate(tg(this.x), tg(this.y) + 0.02)
-            .copyTo(this.layout)
-        }
-        break;
-    }
   }
 
 } 

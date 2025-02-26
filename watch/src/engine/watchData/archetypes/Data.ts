@@ -1,4 +1,4 @@
-import { game } from "./Shared.js";
+import { game } from "./Shared.js"
 
 /** Frame on tick:
  * - head sets game.isTick to true and updates game.tick
@@ -18,14 +18,14 @@ export class Data extends Archetype {
 
   importDataTickDir = Object.fromEntries(
     Array.from({ length: 16 }, (_, index) => {
-      const i = index + 1;
+      const i = index + 1
       return [
         [`tick${i}`, { name: `tick${i}`, type: Number }],
         [`dir${i}`, { name: `dir${i}`, type: Number }],
-      ];
+      ]
     }).flat()
     ,
-  ) as Record<`tick${number}` | `dir${number}`, { name: string; type: NumberConstructor }>;
+  ) as Record<`tick${number}` | `dir${number}`, { name: string; type: NumberConstructor }>
 
 
   import = this.defineImport(this.importDataTickDir)
@@ -34,9 +34,6 @@ export class Data extends Archetype {
   //so we use this varaible to represent wether it has been read or not
   //before first game.isTick, game.tick is 0, so t=1 which match our play mode
   hadReadFirstTick = this.entityMemory(Boolean)
-  //we need to check this tick twice in case 2 events happened
-  successIndex = this.entityMemory(Number)
-
 
   getDir(t: number): number {
     const i = this.import
@@ -44,34 +41,86 @@ export class Data extends Archetype {
     //if the first tick is 0, it means this Data entity never saved any data
     if (i.tick1 == 0) return 0
 
-    let s = this.successIndex
+    let s = game.dataSuccessIndex
     let d = 0
 
-    if (i.tick1 == t && s != 1) { s = 1; d = i.dir1 }
-    else if (i.tick2 == t && s != 2) { s = 2; d = i.dir2 }
-    else if (i.tick3 == t && s != 3) { s = 3; d = i.dir3 }
-    else if (i.tick4 == t && s != 4) { s = 4; d = i.dir4 }
-    else if (i.tick5 == t && s != 5) { s = 5; d = i.dir5 }
-    else if (i.tick6 == t && s != 6) { s = 6; d = i.dir6 }
-    else if (i.tick7 == t && s != 7) { s = 7; d = i.dir7 }
-    else if (i.tick8 == t && s != 8) { s = 8; d = i.dir8 }
-    else if (i.tick9 == t && s != 9) { s = 9; d = i.dir9 }
-    else if (i.tick10 == t && s != 10) { s = 10; d = i.dir10 }
-    else if (i.tick11 == t && s != 11) { s = 11; d = i.dir11 }
-    else if (i.tick12 == t && s != 12) { s = 12; d = i.dir12 }
-    else if (i.tick13 == t && s != 13) { s = 13; d = i.dir13 }
-    else if (i.tick14 == t && s != 14) { s = 14; d = i.dir14 }
-    else if (i.tick15 == t && s != 15) { s = 15; d = i.dir15 }
-    else if (i.tick16 == t && s != 16) { s = 16; d = i.dir16 }
+    // using switch here doesn't really make sense,
+    // however I was previously using `else if` for each `case` but that caused issues with sonolus.js
+    switch (true) {
+      case (i.tick1 == t && s != 1):
+        s = 1
+        d = i.dir1
+        break
+      case (i.tick2 == t && s != 2):
+        s = 2
+        d = i.dir2
+        break
+      case (i.tick3 == t && s != 3):
+        s = 3
+        d = i.dir3
+        break
+      case (i.tick4 == t && s != 4):
+        s = 4
+        d = i.dir4
+        break
+      case (i.tick5 == t && s != 5):
+        s = 5
+        d = i.dir5
+        break
+      case (i.tick6 == t && s != 6):
+        s = 6
+        d = i.dir6
+        break
+      case (i.tick7 == t && s != 7):
+        s = 7
+        d = i.dir7
+        break
+      case (i.tick8 == t && s != 8):
+        s = 8
+        d = i.dir8
+        break
+      case (i.tick9 == t && s != 9):
+        s = 9
+        d = i.dir9
+        break
+      case (i.tick10 == t && s != 10):
+        s = 10
+        d = i.dir10
+        break
+      case (i.tick11 == t && s != 11):
+        s = 11
+        d = i.dir11
+        break
+      case (i.tick12 == t && s != 12):
+        s = 12
+        d = i.dir12
+        break
+      case (i.tick13 == t && s != 13):
+        s = 13
+        d = i.dir13
+        break
+      case (i.tick14 == t && s != 14):
+        s = 14
+        d = i.dir14
+        break
+      case (i.tick15 == t && s != 15):
+        s = 15
+        d = i.dir15
+        break
+      case (i.tick16 == t && s != 16):
+        s = 16
+        d = i.dir16
+        break
+    }
 
-    this.successIndex = s
-    return  d
+    game.dataSuccessIndex = s
+    return d
   }
 
   updateSequential() {
     if (game.isTick || !this.hadReadFirstTick) {
       this.hadReadFirstTick = true
-      this.successIndex = 0
+      game.dataSuccessIndex = 0
       let a = this.getDir(game.tick + 1) //we want the event of the next tick
       if (a != 0) {
         game.dataDir = a

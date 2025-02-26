@@ -28,7 +28,7 @@ export const scaleToGrid = (x: number): number => x * 0.16 - 0.72
 
 /** used for the floating apple animation*/
 export const floatingEffect = (
-  { l, r, b, t }: RectLike,time:number
+  { l, r, b, t }: RectLike, time: number
 ): Quad => {
   const p = Math.sin(time * 2.5)
   const offsetY = p * 0.02
@@ -48,57 +48,110 @@ export const floatingEffect = (
 };
 
 
-  /** animation used in the "no walls" game mode only
-   * update the this.layoutAppear  layout variable*/
-export const HeadAppearAnimation = (layout:Rect,pos:{x:number,y:number},dir: number,p:number) => {
-    switch (dir) {
-      case 2:
-        {
-          new Rect({
-            l: Math.lerp(0.08, - 0.08, p),
-            r: 0.08,
-            b: -0.08,
-            t: 0.08,
-          })
-            .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
-            .copyTo(layout)
-        }
-        break;
-      case 3:
-        {
-          new Rect({
-            l: -0.08,
-            r: 0.08,
-            b: Math.lerp(0.08, -0.08, p),
-            t: 0.08,
-          })
-            .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
-            .copyTo(layout)
-        }
-        break;
-      case 4:
-        {
-          new Rect({
-            l: -0.08,
-            r: Math.lerp(-0.08, 0.08, p),
-            b: -0.08,
-            t: 0.08,
-          })
-            .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
-            .copyTo(layout)
-        }
-        break;
-      case 1:
-        {
-          new Rect({
-            l: -0.08,
-            r: 0.08,
-            b: -0.08,
-            t: Math.lerp(-0.08, 0.08, p),
-          })
-            .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
-            .copyTo(layout)
-        }
-        break;
-    }
+/** animation used in the "no walls" game mode only
+ * update the this.layoutAppear  layout variable*/
+export const HeadAppearAnimation = (layout: Rect, pos: { x: number, y: number }, dir: number, p: number) => {
+  switch (dir) {
+    case 2:
+      {
+        new Rect({
+          l: Math.lerp(0.08, - 0.08, p),
+          r: 0.08,
+          b: -0.08,
+          t: 0.08,
+        })
+          .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
+          .copyTo(layout)
+      }
+      break;
+    case 3:
+      {
+        new Rect({
+          l: -0.08,
+          r: 0.08,
+          b: Math.lerp(0.08, -0.08, p),
+          t: 0.08,
+        })
+          .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
+          .copyTo(layout)
+      }
+      break;
+    case 4:
+      {
+        new Rect({
+          l: -0.08,
+          r: Math.lerp(-0.08, 0.08, p),
+          b: -0.08,
+          t: 0.08,
+        })
+          .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
+          .copyTo(layout)
+      }
+      break;
+    case 1:
+      {
+        new Rect({
+          l: -0.08,
+          r: 0.08,
+          b: -0.08,
+          t: Math.lerp(-0.08, 0.08, p),
+        })
+          .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
+          .copyTo(layout)
+      }
+      break;
   }
+}
+
+export const TailDespawnAnimation = (layout: Rect, dir: number, pos: { x: number, y: number }, p: number) => {
+  switch (dir) {
+    case 4:
+      {
+        new Rect({
+          l: Math.lerp(-0.08, 0.08, p),
+          r: 0.08,
+          b: -0.08,
+          t: 0.08,
+        })
+          .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
+          .copyTo(layout)
+        break
+      }
+    case 1:
+      {
+        new Rect({
+          l: -0.08,
+          r: 0.08,
+          b: Math.lerp(-0.08, 0.08, p),
+          t: 0.08,
+        })
+          .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
+          .copyTo(layout)
+        break
+      }
+    case 2:
+      {
+        new Rect({
+          l: -0.08,
+          r: Math.lerp(0.08, -0.08, p),
+          b: -0.08,
+          t: 0.08,
+        })
+          .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
+          .copyTo(layout)
+        break
+      }
+    case 3:
+      {
+        new Rect({
+          l: -0.08,
+          r: 0.08,
+          b: -0.08,
+          t: Math.lerp(0.08, -0.08, p),
+        })
+          .translate(scaleToGrid(pos.x), scaleToGrid(pos.y) + 0.02)
+          .copyTo(layout)
+        break
+      }
+  }
+}

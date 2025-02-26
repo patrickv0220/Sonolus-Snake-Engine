@@ -15,6 +15,12 @@ export const game = levelMemory({
   bodyColour: Boolean,//used to alternate the body colour
   dataDir: Number,
   dataDir2: Number,
+  dataSuccessIndex: Number, //used to check thie same tick twice in case 2 events happened
+})
+
+export const body = levelMemory({
+  pos: Tuple(100, Number), // {dir}{x}{y}
+  tickLeft: Tuple(100, Number),
 })
 
 export const apple = levelMemory({
