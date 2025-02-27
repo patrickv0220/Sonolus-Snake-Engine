@@ -1,3 +1,5 @@
+import { skin } from "./skin.js";
+
 //static layout used for drawing stuff
 export const layout = {
   sqaure: Rect.one.mul(0.08),
@@ -47,6 +49,47 @@ export const floatingEffect = (
   });
 };
 
+
+export const drawScore = (
+  score: number,
+  layouts: { digit1: Rect, digit2: Rect, digit3: Rect, title: Rect },
+  screenr: number,
+  timeDelta: number,
+
+) => {
+
+  const alpha = 1 - 0.2 * Math.ease("In", "Expo", Math.min(0.5, timeDelta) * 2)
+  if (timeDelta >= 0) {
+    const scale = 0.85 + 0.3 * Math.ease("In", "Expo", Math.min(0.5, timeDelta) * 2)
+    layout.scoreDigit
+      .mul(scale)
+      .translate(screenr * 0.75 + 0.15, 0.04)
+      .copyTo(layouts.digit1)
+    layout.scoreDigit
+      .mul(scale)
+      .translate(screenr * 0.75, 0.04)
+      .copyTo(layouts.digit2)
+    layout.scoreDigit
+      .mul(scale)
+      .translate(screenr * 0.75 - 0.15, 0.04)
+      .copyTo(layouts.digit3)
+
+    layout.score
+      .mul(scale)
+      .translate(screenr * 0.75, -0.14)
+      .copyTo(layouts.title)
+  }
+
+  const digit1 = Math.floor(score % 10) + skin.sprites.numberZero.id as SkinSpriteId
+  const digit2 = Math.floor(score / 10 % 10) + skin.sprites.numberZero.id as SkinSpriteId
+  const digit3 = Math.floor(score / 100) + skin.sprites.numberZero.id as SkinSpriteId
+
+  skin.sprites.draw(digit1, layouts.digit1, 100, alpha)
+  skin.sprites.draw(digit2, layouts.digit2, 101, alpha)
+  skin.sprites.draw(digit3, layouts.digit3, 102, alpha)
+
+  skin.sprites.score.draw(layouts.title, 110, alpha)
+}
 
 /** animation used in the "no walls" game mode only
  * update the this.layoutAppear  layout variable*/

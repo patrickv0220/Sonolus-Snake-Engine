@@ -1,7 +1,7 @@
 import { options } from "../../configuration.js"
 import { skin } from '../../../../../shared/skin.js'
 import { pos, game, apple } from "./Shared.js"
-import { scaleToGrid as tg, layout, floatingEffect } from "../../../../../shared/utilities.js"
+import { scaleToGrid as tg, layout, floatingEffect, drawScore } from "../../../../../shared/utilities.js"
 import { archetypes } from "./index.js"
 
 export class Head extends Archetype {
@@ -25,6 +25,14 @@ export class Head extends Archetype {
   dpadUp = this.entityMemory(Rect)
   dpadRight = this.entityMemory(Quad)
   dpadLeft = this.entityMemory(Quad)
+
+  scoreUpdateTime = this.entityMemory(Number)
+  scoreLayouts = this.entityMemory({
+    digit1: Rect,
+    digit2: Rect,
+    digit3: Rect,
+    title: Rect
+  })
 
 
   preprocess() {
@@ -142,6 +150,7 @@ export class Head extends Archetype {
         apple.y = dir % 10
         game.size++
         if (game.size % 5 == 0) game.tickDuration = Math.max(0.1, game.tickDuration - 0.025)
+        this.scoreUpdateTime = time.now + 0.5
 
       }
 
@@ -195,6 +204,7 @@ export class Head extends Archetype {
 
     //draw UI
     if (options.dpad) this.drawDpad()
+    drawScore(Math.min(999, game.size - 3), this.scoreLayouts, screen.r, this.scoreUpdateTime - time.now)
   }
 
   drawDpad() {

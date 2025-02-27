@@ -1,7 +1,7 @@
 import { options } from "../../configuration.js"
 import { skin } from '../../../../../shared/skin.js'
 import { pos, game, apple, death, data } from "./Shared.js"
-import {scaleToGrid as tg, layout, floatingEffect, HeadAppearAnimation} from "../../../../../shared/utilities.js"
+import { scaleToGrid as tg, layout, floatingEffect, HeadAppearAnimation, drawScore } from "../../../../../shared/utilities.js"
 import { archetypes } from "./index.js";
 import { effect } from "../../../../../shared/effect.js";
 
@@ -34,11 +34,12 @@ export class Head extends Archetype {
   dpadRight = this.entityMemory(Quad)
   dpadLeft = this.entityMemory(Quad)
 
-  //layouts for the custom score counter
-  score = this.entityMemory(Rect)
-  score1 = this.entityMemory(Rect)
-  score2 = this.entityMemory(Rect)
-  score3 = this.entityMemory(Rect)
+  scoreLayouts = this.entityMemory({
+    digit1: Rect,
+    digit2: Rect,
+    digit3: Rect,
+    title: Rect
+  })
 
 
   preprocess() {
@@ -278,7 +279,7 @@ export class Head extends Archetype {
 
       //draw head appearing from other side if the snake passed through a wall
       if (this.hasWrapped) {
-        HeadAppearAnimation(this.layoutAppear,pos,game.dir,game.nextTickAnimationProgress)
+        HeadAppearAnimation(this.layoutAppear, pos, game.dir, game.nextTickAnimationProgress)
         skin.sprites.head.draw(this.layoutAppear, 50, 1)
         skin.sprites.shadow.draw(this.layoutAppear.translate(0, -0.02), 39, 1)
       }
@@ -320,7 +321,7 @@ export class Head extends Archetype {
 
     //draw UI
     if (options.dpad) this.drawDpad()
-    this.drawScore()
+    drawScore(Math.min(999, game.size - 3), this.scoreLayouts, screen.r, this.scoreUpdateTime - time.now)
   }
 
   drawDpad() {
@@ -328,42 +329,6 @@ export class Head extends Archetype {
     skin.sprites.button.draw(this.dpadLeft, 100, (this.dir === 2) ? 0.4 : 0.8)
     skin.sprites.button.draw(this.dpadDown, 100, (this.dir === 3) ? 0.4 : 0.8)
     skin.sprites.button.draw(this.dpadUp, 100, (this.dir === 1) ? 0.4 : 0.8)
-  }
-
-  drawScore() {
-    const score = Math.min(999, game.size - 3)
-
-    const alpha = 1 - 0.2 * Math.ease("In", "Expo", Math.min(0.5, this.scoreUpdateTime - time.now) * 2)
-    if (this.scoreUpdateTime >= time.now) {
-      const scale = 0.85 + 0.3 * Math.ease("In", "Expo", Math.min(0.5, this.scoreUpdateTime - time.now) * 2)
-      layout.scoreDigit
-        .mul(scale)
-        .translate(screen.r * 0.75 + 0.15, 0.04)
-        .copyTo(this.score1)
-      layout.scoreDigit
-        .mul(scale)
-        .translate(screen.r * 0.75, 0.04)
-        .copyTo(this.score2)
-      layout.scoreDigit
-        .mul(scale)
-        .translate(screen.r * 0.75 - 0.15, 0.04)
-        .copyTo(this.score3)
-
-      layout.score
-        .mul(scale)
-        .translate(screen.r * 0.75, -0.14)
-        .copyTo(this.score)
-    }
-
-    const digit1 = Math.floor(score % 10) + skin.sprites.numberZero.id as SkinSpriteId
-    const digit2 = Math.floor(score / 10 % 10) + skin.sprites.numberZero.id as SkinSpriteId
-    const digit3 = Math.floor(score / 100) + skin.sprites.numberZero.id as SkinSpriteId
-
-    skin.sprites.draw(digit1, this.score1, 100, alpha)
-    skin.sprites.draw(digit2, this.score2, 101, alpha)
-    skin.sprites.draw(digit3, this.score3, 102, alpha)
-
-    skin.sprites.score.draw(this.score, 110, alpha)
   }
 
 }
