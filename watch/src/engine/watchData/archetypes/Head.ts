@@ -1,6 +1,6 @@
 import { options } from "../../configuration.js"
 import { skin } from '../../../../../shared/skin.js'
-import { pos, game, apple } from "./Shared.js"
+import { pos, game, apple, body } from "./Shared.js"
 import { scaleToGrid as tg, layout, floatingEffect, drawScore } from "../../../../../shared/utilities.js"
 import { archetypes } from "./index.js"
 
@@ -60,7 +60,10 @@ export class Head extends Archetype {
     pos.x = 1
     pos.y = 3
     game.tickDuration = 0.4
+
     archetypes.Body.spawn({})
+    body.pos.set(0, 413)
+    body.tickLeft.set(0, 3)
   }
 
 
@@ -148,16 +151,18 @@ export class Head extends Archetype {
       if (Math.floor(dir * 0.01) == 5) {
         apple.x = Math.floor((dir % 100) * 0.1)
         apple.y = dir % 10
-        game.size++
-        if (game.size % 5 == 0) game.tickDuration = Math.max(0.1, game.tickDuration - 0.025)
-        this.scoreUpdateTime = time.now + 0.5
-
+        if (game.tick > 1) {
+          game.size++
+          if (game.size % 5 == 0) game.tickDuration = Math.max(0.1, game.tickDuration - 0.025)
+          this.scoreUpdateTime = time.now + 0.5
+        }
       }
 
       //losing 
       if (dir == 6) {
         game.lose = true
         game.dir = 0
+        game.nextTickAnimationProgress = 0
       }
     }
   }

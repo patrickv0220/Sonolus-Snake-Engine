@@ -2,7 +2,7 @@ import { skin } from "../../../../../shared/skin.js";
 import { layout, TailDespawnAnimation, scaleToGrid as tg } from "../../../../../shared/utilities.js";
 import { body, game, pos } from "./Shared.js";
 
-/** Unlike in play mode, in watch mode the body entity draws AKL the body parts
+/** Unlike in play mode, in watch mode the body entity draws ALL the body parts
  * as a single entity*/
 export class Body extends SpawnableArchetype({}) {
 
@@ -15,7 +15,6 @@ export class Body extends SpawnableArchetype({}) {
   updateSequential() {
     if (game.isTick) {
       //add body
-      debug.log(game.tick % 100)
       body.pos.set(game.tick % 100, (game.dir * 100 + pos.x * 10 + pos.y))
       body.tickLeft.set(game.tick % 100, game.size + game.tick)
     }
