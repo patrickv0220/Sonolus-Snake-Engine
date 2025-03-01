@@ -1,7 +1,7 @@
 import { options } from "../../configuration.js"
 import { skin } from '../../../../../shared/skin.js'
 import { pos, game, apple, death, data } from "./Shared.js"
-import { scaleToGrid as tg, layout, floatingEffect, HeadAppearAnimation, drawScore } from "../../../../../shared/utilities.js"
+import { scaleToGrid as tg, layout, floatingEffect, HeadAppearAnimation, drawScore, dpadInitialize, drawDpad } from "../../../../../shared/utilities.js"
 import { archetypes } from "./index.js";
 import { effect } from "../../../../../shared/effect.js";
 
@@ -28,11 +28,12 @@ export class Head extends Archetype {
 
   layoutAppear = this.entityMemory(Rect) //used for the tp animatipn with the no walls option
 
-  //dpad buttons layout
-  dpadDown = this.entityMemory(Rect)
-  dpadUp = this.entityMemory(Rect)
-  dpadRight = this.entityMemory(Quad)
-  dpadLeft = this.entityMemory(Quad)
+  dpadLayout = this.entityMemory({
+    up: Rect,
+    down: Rect,
+    left: Quad,
+    right: Quad
+  })
 
   scoreLayouts = this.entityMemory({
     digit1: Rect,
@@ -67,7 +68,7 @@ export class Head extends Archetype {
 
 
   initialize() {
-    if (options.dpad) this.dpadInitialize()
+    if (options.dpad) dpadInitialize(this.dpadLayout, screen.rect)
 
     this.oldPos.x = pos.x
     this.oldPos.y = pos.y
@@ -77,27 +78,6 @@ export class Head extends Archetype {
     archetypes.Body.spawn({})
 
     if (options.bgm) this.bgMuisc = effect.clips.bgm.loop()
-  }
-
-  dpadInitialize() {
-    const s = (options.dpadSize + 5) * 0.1
-    const o = (options.dpadSize + 15) * 0.05
-    layout.dpadUp
-      .scale(s, s)
-      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
-      .copyTo(this.dpadUp)
-    layout.dpadDown
-      .scale(s, s)
-      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
-      .copyTo(this.dpadDown)
-    layout.dpadLeft
-      .scale(s, s)
-      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
-      .copyTo(this.dpadLeft)
-    layout.dpadRight
-      .scale(s, s)
-      .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
-      .copyTo(this.dpadRight)
   }
 
 
@@ -311,7 +291,7 @@ export class Head extends Archetype {
     //draw apple 🍎
     if (!apple.shouldCheckSpawn && !apple.shouldSpawn) {
       skin.sprites.apple.draw(
-        floatingEffect(layout.sqaure,time.now)
+        floatingEffect(layout.sqaure, time.now)
           .translate(tg(apple.x), tg(apple.y) + 0.02), 50, 1)
     }
 
@@ -320,16 +300,10 @@ export class Head extends Archetype {
     skin.sprites.border.draw(layout.gridBorder, 3, 1)
 
     //draw UI
-    if (options.dpad) this.drawDpad()
+    if (options.dpad) drawDpad(this.dpadLayout, this.dir)
     drawScore(Math.min(999, game.size - 3), this.scoreLayouts, screen.r, this.scoreUpdateTime - time.now)
   }
 
-  drawDpad() {
-    skin.sprites.button.draw(this.dpadRight, 100, (this.dir === 4) ? 0.4 : 0.8)
-    skin.sprites.button.draw(this.dpadLeft, 100, (this.dir === 2) ? 0.4 : 0.8)
-    skin.sprites.button.draw(this.dpadDown, 100, (this.dir === 3) ? 0.4 : 0.8)
-    skin.sprites.button.draw(this.dpadUp, 100, (this.dir === 1) ? 0.4 : 0.8)
-  }
 
 }
 

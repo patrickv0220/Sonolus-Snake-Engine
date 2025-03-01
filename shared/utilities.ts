@@ -1,4 +1,5 @@
 import { skin } from "./skin.js";
+import { options } from "../play/src/engine/configuration.js"
 
 //static layout used for drawing stuff
 export const layout = {
@@ -28,6 +29,28 @@ export const layout = {
  * will return x's position on the screen to draw something*/
 export const scaleToGrid = (x: number): number => x * 0.16 - 0.72
 
+export const dpadInitialize = (dpadLayout: { right: Quad, left: Quad, down: Rect, up: Rect }, screen: Rect) => {
+  const s = (options.dpadSize + 5) * 0.1
+  const o = (options.dpadSize + 15) * 0.05
+  layout.dpadUp
+    .scale(s, s)
+    .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
+    .copyTo(dpadLayout.up)
+  layout.dpadDown
+    .scale(s, s)
+    .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
+    .copyTo(dpadLayout.down)
+  layout.dpadLeft
+    .scale(s, s)
+    .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
+    .copyTo(dpadLayout.left)
+  layout.dpadRight
+    .scale(s, s)
+    .translate(screen.l + 0.45 * o, screen.b + 0.45 * o)
+    .copyTo(dpadLayout.right)
+}
+
+
 /** used for the floating apple animation*/
 export const floatingEffect = (
   { l, r, b, t }: RectLike, time: number
@@ -49,6 +72,12 @@ export const floatingEffect = (
   });
 };
 
+export const drawDpad = (dpadLayout: { right: Quad, left: Quad, down: Rect, up: Rect }, dir: number) => {
+  skin.sprites.button.draw(dpadLayout.right, 100, (dir === 4) ? 0.4 : 0.8)
+  skin.sprites.button.draw(dpadLayout.left, 100, (dir === 2) ? 0.4 : 0.8)
+  skin.sprites.button.draw(dpadLayout.down, 100, (dir === 3) ? 0.4 : 0.8)
+  skin.sprites.button.draw(dpadLayout.up, 100, (dir === 1) ? 0.4 : 0.8)
+}
 
 export const drawScore = (
   score: number,
