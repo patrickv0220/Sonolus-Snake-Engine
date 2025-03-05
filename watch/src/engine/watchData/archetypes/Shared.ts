@@ -11,6 +11,7 @@ export const game = levelMemory({
   dir: Number,
   size: Number,
   lose: Boolean,
+  deathTime: Number,
   nextTickAnimationProgress: Number,//used for the lerp animation when drawiing movinng head and tai
   bodyColour: Boolean,//used to alternate the body colour
   dataDir: Number,

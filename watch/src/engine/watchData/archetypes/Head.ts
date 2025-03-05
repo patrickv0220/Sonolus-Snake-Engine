@@ -1,7 +1,7 @@
 import { options } from "../../configuration.js"
 import { skin } from '../../../../../shared/skin.js'
 import { pos, game, apple, body } from "./Shared.js"
-import { scaleToGrid as tg, layout, floatingEffect, drawScore, drawDpad, dpadInitialize } from "../../../../../shared/utilities.js"
+import { scaleToGrid as tg, layout, floatingEffect, drawScore, drawDpad, dpadInitialize, HeadAppearAnimation } from "../../../../../shared/utilities.js"
 import { archetypes } from "./index.js"
 
 export class Head extends Archetype {
@@ -15,10 +15,15 @@ export class Head extends Archetype {
 
   //entity memory
   nextTickTime = this.entityMemory(Number)
+  borderAlert = this.entityMemory(Boolean)
+  hasWrapped = this.entityMemory(Boolean)
+  blink = this.entityMemory(Number)
   oldPos = this.entityMemory({
     x: Number,
     y: Number
   })
+
+  layoutAppear = this.entityMemory(Rect) //used for the tp animatipn with the no walls option
 
   dpadLayout = this.entityMemory({
     up: Rect,
@@ -89,6 +94,8 @@ export class Head extends Archetype {
   }
 
   onTick() {
+    this.hasWrapped = false
+
     game.isTick = true
     game.tick++
 
@@ -113,8 +120,15 @@ export class Head extends Archetype {
         //wrap to the other side
         pos.x = ((pos.x % 10) + 10) % 10
         pos.y = ((pos.y % 10) + 10) % 10
+        this.hasWrapped = true
       }
     }
+
+    // blinking border animation 
+    if (!options.noWall) this.borderAlert = (Math.max(pos.x, pos.y) > 8 || Math.min(pos.x, pos.y) < 1)
+
+    //randomly blink 👁️
+    if (Math.random() >= 0.08) this.blink = time.now + 0.5
   }
 
 
@@ -143,6 +157,7 @@ export class Head extends Archetype {
         game.lose = true
         game.dir = 0
         game.nextTickAnimationProgress = 0
+        game.deathTime = time.now
       }
     }
   }
@@ -152,6 +167,10 @@ export class Head extends Archetype {
 
     //draw the dead snake's head 💀
     if (game.lose) {
+
+      //shake camera (grid)
+      const shake = Math.pow(Math.max(game.deathTime + 1 - time.now, 0) * 0.1, 2)
+      skin.sprites.grid.draw(layout.grid.translate(Math.randomFloat(-shake, shake), Math.randomFloat(-shake, shake)), 2, 1)
 
       //draw head dead 💀
       skin.sprites.headDead.draw(layout.sqaure
@@ -166,16 +185,34 @@ export class Head extends Archetype {
       //progress value for the lerp animation for head and body
       game.nextTickAnimationProgress = (time.now - this.nextTickTime + game.tickDuration) / game.tickDuration
 
+      //draw head appearing from other side if the snake passed through a wall
+      if (this.hasWrapped) {
+        HeadAppearAnimation(this.layoutAppear, pos, game.dir, game.nextTickAnimationProgress)
+        skin.sprites.head.draw(this.layoutAppear, 50, 1)
+        skin.sprites.shadow.draw(this.layoutAppear.translate(0, -0.02), 39, 1)
+      }
+
       //draw the head normally
-      skin.sprites.head.draw(
-        layout.sqaure.translate(
+      else {
+        skin.sprites.head.draw(
+          layout.sqaure.translate(
+            tg(Math.lerp(this.oldPos.x, pos.x, game.nextTickAnimationProgress)),
+            tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) + 0.02,
+          ), 50, 1)
+
+        //eyelid animation 
+        const a = Math.max(0, Math.min(0.04, (((this.blink - time.now) * -1) * 0.05)))
+        skin.sprites.eyelid.draw(layout.line.translate(
           tg(Math.lerp(this.oldPos.x, pos.x, game.nextTickAnimationProgress)),
-          tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) + 0.02,
-        ), 50, 1)
+          tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) + 0.09 - a),
+          51, 1)
 
-      //shadow below the head
-      skin.sprites.shadow.draw(layout.line.translate(tg(Math.lerp(this.oldPos.x, pos.x, game.nextTickAnimationProgress)), tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) - 0.07), 39, 1)
+        //shadow below the head
+        skin.sprites.shadow.draw(layout.line.translate(tg(Math.lerp(this.oldPos.x, pos.x, game.nextTickAnimationProgress)), tg(Math.lerp(this.oldPos.y, pos.y, game.nextTickAnimationProgress)) - 0.07), 39, 1)
+      }
 
+      //drawing the blinking border
+      if (this.borderAlert && (Math.floor(time.now * 5) % 2 === 0)) skin.sprites.borderDanger.draw(layout.gridBorder, 4, 0.5)
     }
 
     //draw apple 🍎
