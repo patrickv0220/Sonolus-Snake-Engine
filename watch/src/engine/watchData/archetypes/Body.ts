@@ -46,8 +46,16 @@ export class Body extends SpawnableArchetype({}) {
         //draw "normal" body parts
         else if (body.tickLeft.get(index) < game.tick + game.size) {
 
-          const bodyRect = layout.sqaure.translate(tg(x), tg(y) + 0.02)
-          const shadow = layout.line.translate(tg(x), tg(y) - 0.07)
+          let yOffset = 0 //death animation
+          if (game.lose && body.tickLeft.get(index) != game.tick + game.size - 1) {
+            const p = time.now - game.deathTime - ((game.size - (body.tickLeft.get(index) - game.tick)) * 0.15)
+            if (p >= 0 && p <= 0.15) {
+              yOffset = Math.max(0, 0.02 * Math.sin(p / 0.1 * Math.PI)) + 0.02
+            }
+          }
+
+          const bodyRect = layout.sqaure.translate(tg(x), tg(y) + yOffset + 0.02)
+          const shadow = layout.line.translate(tg(x), tg(y) + yOffset - 0.07)
 
           skin.sprites.shadow.draw(shadow, 39, 1)
           skin.sprites.draw(bodySkin, bodyRect, 40, 1)
