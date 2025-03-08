@@ -45,12 +45,7 @@ export class Head extends Archetype {
 
   preprocess() {
     ui.menu.set({
-      anchor: new Rect({
-        l: screen.l + 0.05,
-        r: screen.r - 0.05,
-        b: screen.b + 0.05,
-        t: screen.t - 0.05,
-      }).rt,
+      anchor: screen.rect.shrink(0.05, 0.05).rt,
       pivot: { x: 1, y: 1 },
       size: new Vec(0.15, 0.15).mul(ui.configuration.menu.scale),
       rotation: 0,
@@ -68,7 +63,7 @@ export class Head extends Archetype {
 
 
   initialize() {
-    if (options.dpad) dpadInitialize(this.dpadLayout, screen.rect)
+    if (options.dpad) dpadInitialize(this.dpadLayout)
 
     this.oldPos.x = pos.x
     this.oldPos.y = pos.y
@@ -180,6 +175,8 @@ export class Head extends Archetype {
     game.isTick = true
     game.tick++
 
+    if (options.timeLimit != 0 && time.now > options.timeLimit) death()
+
     //when the direction changes
     if (game.dir != this.previousDir) {
       effect.clips.swipe.play(0.02)
@@ -286,22 +283,25 @@ export class Head extends Archetype {
 
       //drawing the blinking border
       if (this.borderAlert && (Math.floor(time.now * 5) % 2 === 0)) skin.sprites.borderDanger.draw(layout.gridBorder, 4, 0.5)
+
+      //draw time limit progress bar
+      if (options.timeLimit != 0) skin.sprites.shadow.draw(new Rect({ l: screen.l, r: Math.remap(0, options.timeLimit, screen.r, screen.l, time.now), b: screen.t - 0.04, t: screen.t }), 120, 1)
     }
 
     //draw apple 🍎
     if (!apple.shouldCheckSpawn && !apple.shouldSpawn) {
       skin.sprites.apple.draw(
-        floatingEffect(layout.sqaure, time.now)
+        floatingEffect(layout.sqaure)
           .translate(tg(apple.x), tg(apple.y) + 0.02), 50, 1)
     }
 
-    //draw gride ⬜
+    //draw grid ⬜
     skin.sprites.grid.draw(layout.grid, 1, 1)
     skin.sprites.border.draw(layout.gridBorder, 3, 1)
 
     //draw UI
     if (options.dpad) drawDpad(this.dpadLayout, this.dir)
-    drawScore(Math.min(999, game.size - 3), this.scoreLayouts, screen.r, this.scoreUpdateTime - time.now)
+    drawScore(Math.min(999, game.size - 3), this.scoreLayouts, this.scoreUpdateTime - time.now)
   }
 
 

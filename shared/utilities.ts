@@ -29,7 +29,7 @@ export const layout = {
  * will return x's position on the screen to draw something*/
 export const scaleToGrid = (x: number): number => x * 0.16 - 0.72
 
-export const dpadInitialize = (dpadLayout: { right: Quad, left: Quad, down: Rect, up: Rect }, screen: Rect) => {
+export const dpadInitialize = (dpadLayout: { right: Quad, left: Quad, down: Rect, up: Rect }) => {
   const s = (options.dpadSize + 5) * 0.1
   const o = (options.dpadSize + 15) * 0.05
   layout.dpadUp
@@ -53,9 +53,9 @@ export const dpadInitialize = (dpadLayout: { right: Quad, left: Quad, down: Rect
 
 /** used for the floating apple animation*/
 export const floatingEffect = (
-  { l, r, b, t }: RectLike, time: number
+  { l, r, b, t }: RectLike
 ): Quad => {
-  const p = Math.sin(time * 2.5)
+  const p = Math.sin(time.now * 2.5)
   const offsetY = p * 0.02
   const angle = p * 0.05
 
@@ -82,7 +82,6 @@ export const drawDpad = (dpadLayout: { right: Quad, left: Quad, down: Rect, up: 
 export const drawScore = (
   score: number,
   layouts: { digit1: Rect, digit2: Rect, digit3: Rect, title: Rect },
-  screenr: number,
   timeDelta: number,
 
 ) => {
@@ -92,20 +91,20 @@ export const drawScore = (
     const scale = 0.85 + 0.3 * Math.ease("In", "Expo", Math.min(0.5, timeDelta) * 2)
     layout.scoreDigit
       .mul(scale)
-      .translate(screenr * 0.75 + 0.15, 0.04)
+      .translate(screen.r * 0.75 + 0.15, 0.04)
       .copyTo(layouts.digit1)
     layout.scoreDigit
       .mul(scale)
-      .translate(screenr * 0.75, 0.04)
+      .translate(screen.r * 0.75, 0.04)
       .copyTo(layouts.digit2)
     layout.scoreDigit
       .mul(scale)
-      .translate(screenr * 0.75 - 0.15, 0.04)
+      .translate(screen.r * 0.75 - 0.15, 0.04)
       .copyTo(layouts.digit3)
 
     layout.score
       .mul(scale)
-      .translate(screenr * 0.75, -0.14)
+      .translate(screen.r * 0.75, -0.14)
       .copyTo(layouts.title)
   }
 
